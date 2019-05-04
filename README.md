@@ -12,7 +12,6 @@ Provides an `ImmutableAttribute` type which can be applied to classes and struct
 | `IMM003` | Error | Types of fields in an immutable type must be immutable
 | `IMM004` | Error | Types of auto properties in an immutable type must be immutable
 | `IMM005` | Warning | 'This' should not be passed out of the constructor of an immutable type
-| `IMM006` | Warning | 'This' should not be captured in a closure within the constructor of an immutable type
-| `IMM007` | Error | The base type of an immutable type must be 'object' or immutable
-| `IMM008` | Error | Types derived from an immutable type must be immutable
+| `IMM006` | Error | The base type of an immutable type must be 'object' or immutable
+| `IMM007` | Error | Types derived from an immutable type must be immutable
 
