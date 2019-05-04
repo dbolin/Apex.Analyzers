@@ -91,8 +91,9 @@ namespace Apex.Analyzers.Immutable.Rules
         internal static bool ShouldCheckMemberTypeForImmutability(ISymbol symbol)
         {
             return !symbol.IsStatic
-                && !symbol.GetAttributes().Any(x => x.AttributeClass.Name == "NonSerializedAttribute"
-                    && x.AttributeClass.ContainingNamespace?.Name == "System");
+                && (symbol.DeclaredAccessibility != Accessibility.Private
+                    || !symbol.GetAttributes().Any(x => x.AttributeClass.Name == "NonSerializedAttribute"
+                    && x.AttributeClass.ContainingNamespace?.Name == "System"));
         }
 
         private static bool IsGenericTypeImmutable(INamedTypeSymbol type, Compilation compilation,

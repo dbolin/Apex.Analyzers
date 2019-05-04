@@ -63,6 +63,35 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [TestMethod]
+        public void IMM001MemberFieldNotReadonlyNonSerializedPublic()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            [NonSerialized]
+            public int x;
+        }
+");
+
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM001",
+                Message = "Field 'x' is not declared as readonly",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 17, 24)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            var fixtest = test.Replace("public int x", "public readonly int x");
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        [TestMethod]
         public void IMM001MemberFieldReadonly()
         {
             var test = GetCode(@"
