@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Analyzers.Immutable", "Immutable\Apex.Analyzers.Immutable\Apex.Analyzers.Immutable.csproj", "{35B969E5-F2AA-4B01-BB49-65D682AF9F5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Analyzers.Immutable.Test", "Immutable\Apex.Analyzers.Immutable.Test\Apex.Analyzers.Immutable.Test.csproj", "{4A0F3C3C-6665-425B-9D95-4F3719675F50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apex.Analyzers.Immutable.Vsix", "Immutable\Apex.Analyzers.Immutable.Vsix\Apex.Analyzers.Immutable.Vsix.csproj", "{EE0B19A1-9F82-402F-BDD5-06B93102602E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35B969E5-F2AA-4B01-BB49-65D682AF9F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B969E5-F2AA-4B01-BB49-65D682AF9F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B969E5-F2AA-4B01-BB49-65D682AF9F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B969E5-F2AA-4B01-BB49-65D682AF9F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A0F3C3C-6665-425B-9D95-4F3719675F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A0F3C3C-6665-425B-9D95-4F3719675F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A0F3C3C-6665-425B-9D95-4F3719675F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A0F3C3C-6665-425B-9D95-4F3719675F50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE0B19A1-9F82-402F-BDD5-06B93102602E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE0B19A1-9F82-402F-BDD5-06B93102602E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE0B19A1-9F82-402F-BDD5-06B93102602E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE0B19A1-9F82-402F-BDD5-06B93102602E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2BCC1967-9232-4ED7-A17D-4EF54414DF21}
+	EndGlobalSection
+EndGlobal
