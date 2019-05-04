@@ -3,14 +3,14 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Apex.Analyzers.Immutable.Rules
 {
-    internal static class IMM002
+    internal static class IMM004
     {
-        public const string DiagnosticId = "IMM002";
+        public const string DiagnosticId = "IMM004";
 
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.IMM002Title), Resources.ResourceManager, typeof(Resources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.IMM002MessageFormat), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.IMM004Title), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.IMM004MessageFormat), Resources.ResourceManager, typeof(Resources));
 
-        private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.IMM002Description), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.IMM004Description), Resources.ResourceManager, typeof(Resources));
         private const string Category = "Architecture";
 
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
@@ -29,8 +29,8 @@ namespace Apex.Analyzers.Immutable.Rules
             }
 
             if(Helper.HasImmutableAttribute(containingType)
-                && !symbol.IsReadOnly
                 && !symbol.IsStatic
+                && !Helper.IsImmutableType(symbol.Type)
                 && Helper.IsAutoProperty(symbol))
             {
                 var diagnostic = Diagnostic.Create(Rule, symbol.Locations[0], symbol.Name);

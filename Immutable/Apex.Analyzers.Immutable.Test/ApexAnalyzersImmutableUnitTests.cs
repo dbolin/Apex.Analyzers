@@ -115,6 +115,19 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [TestMethod]
+        public void IMM002MemberPropNotReadonlyNotAuto()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            private int x {get => 1; set {} }
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
         public void IMM002MemberPropReadonly()
         {
             var test = GetCode(@"
@@ -138,6 +151,152 @@ namespace Apex.Analyzers.Immutable.Test
         }
 ");
             VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM003MemberFieldsWhitelisted()
+        {
+            var test = GetCode(@"
+        enum TestEnum {
+            A
+        }
+        [Immutable]
+        class Test
+        {
+            private readonly TestEnum x;
+            private readonly byte a;
+            private readonly char b;
+            private readonly sbyte c;
+            private readonly short d;
+            private readonly ushort e;
+            private readonly int f;
+            private readonly uint g;
+            private readonly long h;
+            private readonly ulong i;
+            private readonly string j;
+            private readonly DateTime k;
+            private readonly float l;
+            private readonly double m;
+            private readonly decimal n;
+            private readonly object o;
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM003MemberFieldsImmutable()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class TestI {
+        }
+        [Immutable]
+        class Test
+        {
+            private readonly TestI x;
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM003MemberFieldsNotImmutable()
+        {
+            var test = GetCode(@"
+        class TestI {
+        }
+        [Immutable]
+        class Test
+        {
+            private readonly TestI x;
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM003",
+                Message = "Type of field 'x' is not immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 17, 36)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM004MemberPropsWhitelisted()
+        {
+            var test = GetCode(@"
+        enum TestEnum {
+            A
+        }
+        [Immutable]
+        class Test
+        {
+            private TestEnum x {get;}
+            private byte a {get;}
+            private char b {get;}
+            private sbyte c {get;}
+            private short d {get;}
+            private ushort e {get;}
+            private int f {get;}
+            private uint g {get;}
+            private long h {get;}
+            private ulong i {get;}
+            private string j {get;}
+            private DateTime k {get;}
+            private float l {get;}
+            private double m {get;}
+            private decimal n {get;}
+            private object o {get;}
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM004MemberPropsImmutable()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class TestI {
+        }
+        [Immutable]
+        class Test
+        {
+            private TestI x {get;}
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM004MemberPropsNotImmutable()
+        {
+            var test = GetCode(@"
+        class TestI {
+        }
+        [Immutable]
+        class Test
+        {
+            private TestI x {get; }
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM004",
+                Message = "Type of auto property 'x' is not immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 17, 27)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         private string GetCode(string code)

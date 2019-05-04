@@ -114,5 +114,59 @@ namespace Apex.Analyzers.Immutable {
                 return ResourceManager.GetString("IMM002Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types of fields in an immutable type must be immutable.
+        /// </summary>
+        internal static string IMM003Description {
+            get {
+                return ResourceManager.GetString("IMM003Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type of field &apos;{0}&apos; is not immutable.
+        /// </summary>
+        internal static string IMM003MessageFormat {
+            get {
+                return ResourceManager.GetString("IMM003MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types of fields in an immutable type must be immutable.
+        /// </summary>
+        internal static string IMM003Title {
+            get {
+                return ResourceManager.GetString("IMM003Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types of auto properties in an immutable type must be immutable.
+        /// </summary>
+        internal static string IMM004Description {
+            get {
+                return ResourceManager.GetString("IMM004Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type of auto property &apos;{0}&apos; is not immutable.
+        /// </summary>
+        internal static string IMM004MessageFormat {
+            get {
+                return ResourceManager.GetString("IMM004MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types of auto properties in an immutable type must be immutable.
+        /// </summary>
+        internal static string IMM004Title {
+            get {
+                return ResourceManager.GetString("IMM004Title", resourceCulture);
+            }
+        }
     }
 }

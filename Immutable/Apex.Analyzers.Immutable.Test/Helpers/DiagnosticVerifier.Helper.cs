@@ -158,7 +158,8 @@ namespace TestHelper
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
                 .AddMetadataReference(projectId, CodeAnalysisReference)
                 .AddMetadataReference(projectId, AnalyzerReference)
-                .AddMetadataReference(projectId, AttributeReference);
+                .AddMetadataReference(projectId, AttributeReference)
+                .WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.ConsoleApplication, allowUnsafe: true));
 
             int count = 0;
             foreach (var source in sources)
