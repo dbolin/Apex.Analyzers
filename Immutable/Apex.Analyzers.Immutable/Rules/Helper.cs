@@ -29,7 +29,7 @@ namespace Apex.Analyzers.Immutable.Rules
             return result != null && result.Any();
         }
 
-        internal static bool IsImmutableType(ITypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
+        internal static bool IsImmutableType(ITypeSymbol type, Compilation compilation, HashSet<ITypeSymbol> excludedTypes = null)
         {
             if (type.TypeKind == TypeKind.Dynamic)
             {
@@ -46,7 +46,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 if (type is INamedTypeSymbol nts
                     && nts.IsGenericType)
                 {
-                    return AreGenericTypeArgumentsImmutable(nts, excludedTypes);
+                    return AreGenericTypeArgumentsImmutable(nts, compilation, excludedTypes);
                 }
 
                 return true;
@@ -57,13 +57,13 @@ namespace Apex.Analyzers.Immutable.Rules
                 if(type is INamedTypeSymbol nts
                     && nts.IsGenericType)
                 {
-                    return IsGenericTypeImmutable(nts, excludedTypes);
+                    return IsGenericTypeImmutable(nts, compilation, excludedTypes);
                 }
 
                 return true;
             }
 
-            if(IsWhitelistedType(type))
+            if(IsWhitelistedType(type, compilation))
             {
                 return true;
             }
@@ -90,7 +90,7 @@ namespace Apex.Analyzers.Immutable.Rules
                     && x.AttributeClass.ContainingNamespace?.Name == "System");
         }
 
-        private static bool IsGenericTypeImmutable(INamedTypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
+        private static bool IsGenericTypeImmutable(INamedTypeSymbol type, Compilation compilation, HashSet<ITypeSymbol> excludedTypes = null)
         {
             if(excludedTypes == null)
             {
@@ -110,10 +110,10 @@ namespace Apex.Analyzers.Immutable.Rules
                 .Where(x => !excludedTypes.Contains(x))
                 .ToList();
 
-            return typesToCheck.All(x => IsImmutableType(x, excludedTypes));
+            return typesToCheck.All(x => IsImmutableType(x, compilation, excludedTypes));
         }
 
-        private static bool AreGenericTypeArgumentsImmutable(INamedTypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
+        private static bool AreGenericTypeArgumentsImmutable(INamedTypeSymbol type, Compilation compilation, HashSet<ITypeSymbol> excludedTypes = null)
         {
             if (excludedTypes == null)
             {
@@ -123,7 +123,7 @@ namespace Apex.Analyzers.Immutable.Rules
 
             var typesToCheck = type.TypeArguments;
 
-            return typesToCheck.All(x => IsImmutableType(x, excludedTypes));
+            return typesToCheck.All(x => IsImmutableType(x, compilation, excludedTypes));
         }
 
         private static Func<ITypeSymbol, bool> ShouldCheckTypeForGenericImmutability(INamedTypeSymbol type)
@@ -139,7 +139,7 @@ namespace Apex.Analyzers.Immutable.Rules
             };
         }
 
-        private static bool IsWhitelistedType(ITypeSymbol type)
+        private static bool IsWhitelistedType(ITypeSymbol type, Compilation compilation)
         {
             switch (type.SpecialType)
             {
@@ -213,7 +213,45 @@ namespace Apex.Analyzers.Immutable.Rules
                 case SpecialType.System_AsyncCallback:
                     break;
             }
+
+            if(GetGuidType(compilation) == type
+                || GetTimeSpanType(compilation) == type
+                || GetDateTimeOffsetType(compilation) == type
+                || GetUriType(compilation) == type
+                )
+            {
+                return true;
+            }
+
             return false;
+        }
+
+        private static ITypeSymbol _guidSymbol;
+
+        private static ITypeSymbol GetGuidType(Compilation compilation)
+        {
+            return _guidSymbol ?? (_guidSymbol = compilation.GetTypeByMetadataName("System.Guid"));
+        }
+
+        private static ITypeSymbol _timeSpanSymbol;
+
+        private static ITypeSymbol GetTimeSpanType(Compilation compilation)
+        {
+            return _timeSpanSymbol ?? (_timeSpanSymbol = compilation.GetTypeByMetadataName("System.TimeSpan"));
+        }
+
+        private static ITypeSymbol _dateTimeOffsetSymbol;
+
+        private static ITypeSymbol GetDateTimeOffsetType(Compilation compilation)
+        {
+            return _dateTimeOffsetSymbol ?? (_dateTimeOffsetSymbol = compilation.GetTypeByMetadataName("System.DateTimeOffset"));
+        }
+
+        private static ITypeSymbol _uriSymbol;
+
+        private static ITypeSymbol GetUriType(Compilation compilation)
+        {
+            return _uriSymbol ?? (_uriSymbol = compilation.GetTypeByMetadataName("System.Uri"));
         }
     }
 }

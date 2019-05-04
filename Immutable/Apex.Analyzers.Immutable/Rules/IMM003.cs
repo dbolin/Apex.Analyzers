@@ -30,7 +30,7 @@ namespace Apex.Analyzers.Immutable.Rules
 
             if(Helper.HasImmutableAttribute(containingType)
                 && Helper.ShouldCheckMemberTypeForImmutability(symbol)
-                && !Helper.IsImmutableType(symbol.Type))
+                && !Helper.IsImmutableType(symbol.Type, context.Compilation))
             {
                 var diagnostic = Diagnostic.Create(Rule, symbol.Locations[0], symbol.Name);
                 context.ReportDiagnostic(diagnostic);
