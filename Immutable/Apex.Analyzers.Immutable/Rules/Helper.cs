@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -28,7 +29,7 @@ namespace Apex.Analyzers.Immutable.Rules
             return result != null && result.Any();
         }
 
-        internal static bool IsImmutableType(ITypeSymbol type)
+        internal static bool IsImmutableType(ITypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
         {
             if (type.TypeKind == TypeKind.Dynamic)
             {
@@ -50,7 +51,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 if(type is INamedTypeSymbol nts
                     && nts.IsGenericType)
                 {
-                    return IsGenericTypeImmutable(nts);
+                    return IsGenericTypeImmutable(nts, excludedTypes);
                 }
 
                 return true;
@@ -81,8 +82,14 @@ namespace Apex.Analyzers.Immutable.Rules
                     && x.AttributeClass.ContainingNamespace?.Name == "System");
         }
 
-        private static bool IsGenericTypeImmutable(INamedTypeSymbol type)
+        private static bool IsGenericTypeImmutable(INamedTypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
         {
+            if(excludedTypes == null)
+            {
+                excludedTypes = new HashSet<ITypeSymbol>();
+            }
+            excludedTypes.Add(type);
+
             var members = type.GetMembers();
             var fields = members.OfType<IFieldSymbol>();
             var autoProperties = members.OfType<IPropertySymbol>().Where(x => IsAutoProperty(x));
@@ -92,9 +99,10 @@ namespace Apex.Analyzers.Immutable.Rules
             var typesToCheck =
                 fields.Select(x => x.Type).Where(filter)
                 .Concat(autoProperties.Select(x => x.Type).Where(filter))
+                .Where(x => !excludedTypes.Contains(x))
                 .ToList();
 
-            return typesToCheck.All(IsImmutableType);
+            return typesToCheck.All(x => IsImmutableType(x, excludedTypes));
         }
 
         private static Func<ITypeSymbol, bool> ShouldCheckTypeForGenericImmutability(INamedTypeSymbol type)
