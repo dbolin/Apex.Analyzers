@@ -10,9 +10,14 @@ namespace Apex.Analyzers.Immutable.Rules
     {
         internal static bool HasImmutableAttribute(ITypeSymbol type)
         {
+            if(type == null)
+            {
+                return false;
+            }
+
             var attributes = type.GetAttributes();
-            return attributes.Any(x => x.AttributeClass.Name == "ImmutableAttribute"
-                && x.AttributeClass.ContainingNamespace?.Name == "System");
+            return attributes.Any(x => x.AttributeClass?.Name == "ImmutableAttribute"
+                && x.AttributeClass?.ContainingNamespace?.Name == "System");
         }
 
         internal static bool IsAutoProperty(IPropertySymbol symbol)
@@ -41,7 +46,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
-            if(HasImmutableNamespace(type))
+            if(HasImmutableNamespace(type) || type.OriginalDefinition == GetNullableType(compilation))
             {
                 if (type is INamedTypeSymbol nts
                     && nts.IsGenericType)
@@ -52,7 +57,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
-            if(HasImmutableAttribute(type))
+            if (HasImmutableAttribute(type))
             {
                 if(type is INamedTypeSymbol nts
                     && nts.IsGenericType)
@@ -214,7 +219,8 @@ namespace Apex.Analyzers.Immutable.Rules
                     break;
             }
 
-            if(GetGuidType(compilation) == type
+            if(
+                GetGuidType(compilation) == type
                 || GetTimeSpanType(compilation) == type
                 || GetDateTimeOffsetType(compilation) == type
                 || GetUriType(compilation) == type
@@ -252,6 +258,13 @@ namespace Apex.Analyzers.Immutable.Rules
         private static ITypeSymbol GetUriType(Compilation compilation)
         {
             return _uriSymbol ?? (_uriSymbol = compilation.GetTypeByMetadataName("System.Uri"));
+        }
+
+        private static ITypeSymbol _nullableType;
+
+        private static ITypeSymbol GetNullableType(Compilation compilation)
+        {
+            return _nullableType ?? (_nullableType = compilation.GetTypeByMetadataName("System.Nullable`1"));
         }
     }
 }

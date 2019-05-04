@@ -196,6 +196,7 @@ namespace Apex.Analyzers.Immutable.Test
             private readonly Guid p;
             private readonly TimeSpan q;
             private readonly DateTimeOffset r;
+            private readonly int? s;
         }
 ");
             VerifyCSharpDiagnostic(test);
