@@ -8,14 +8,14 @@
 
   <PropertyGroup>
     <PackageId>Apex.Analyzers.Immutable</PackageId>
-    <PackageVersion>0.9.0.0</PackageVersion>
+    <PackageVersion>0.9.0.1</PackageVersion>
     <Authors>Luxor</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dbolin/Apex.Analyzers</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dbolin/Apex.Analyzers</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Roslyn powered analyzers for C# to support convention defined architecture</Description>
+    <Description>Roslyn powered analyzers for C# to support defining immutable types</Description>
     <Copyright>Copyright (c) 2019 Dominic Bolin</Copyright>
     <PackageTags>Apex.Analyzers.Immutable, immutable, architecture, design, csharp, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
