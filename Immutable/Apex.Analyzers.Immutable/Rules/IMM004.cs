@@ -29,7 +29,7 @@ namespace Apex.Analyzers.Immutable.Rules
             }
 
             if(Helper.HasImmutableAttribute(containingType)
-                && !symbol.IsStatic
+                && Helper.ShouldCheckMemberTypeForImmutability(symbol)
                 && !Helper.IsImmutableType(symbol.Type)
                 && Helper.IsAutoProperty(symbol))
             {

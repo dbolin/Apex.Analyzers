@@ -38,7 +38,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 15, 25)
+                            new DiagnosticResultLocation("Test0.cs", 16, 25)
                         }
             };
 
@@ -46,6 +46,20 @@ namespace Apex.Analyzers.Immutable.Test
 
             var fixtest = test.Replace("private int x", "private readonly int x");
             VerifyCSharpFix(test, fixtest);
+        }
+
+        [TestMethod]
+        public void IMM001MemberFieldNotReadonlyNonSerialized()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            [NonSerialized]
+            private int x;
+        }
+");
+            VerifyCSharpDiagnostic(test);
         }
 
         [TestMethod]
@@ -104,7 +118,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 15, 25)
+                            new DiagnosticResultLocation("Test0.cs", 16, 25)
                         }
             };
 
@@ -201,6 +215,19 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [TestMethod]
+        public void IMM003MemberFieldsImmutableNamespace()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            private readonly ImmutableArray<int> x;
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
         public void IMM003MemberFieldsGeneric()
         {
             var test = GetCode(@"
@@ -241,7 +268,48 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 26, 47)
+                            new DiagnosticResultLocation("Test0.cs", 27, 47)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM003MemberFieldsGenericNotImmutableConcretePropogation()
+        {
+            var test = GetCode(@"
+    public class MutableClass
+    {
+    }
+
+    [Immutable]
+    public class ImmutableTuple<T>
+    {
+        public readonly T Value;
+    }
+
+    [Immutable]
+    public class Class1<T>
+    {
+        private readonly int x;
+        private readonly ImmutableTuple<T> Value;
+    }
+
+    [Immutable]
+    public class Test
+    {
+        private readonly Class1<MutableClass> TestValue;
+    }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM003",
+                Message = "Type of field 'TestValue' is not immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 33, 47)
                         }
             };
 
@@ -267,7 +335,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 17, 36)
+                            new DiagnosticResultLocation("Test0.cs", 18, 36)
                         }
             };
 
@@ -340,7 +408,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 17, 27)
+                            new DiagnosticResultLocation("Test0.cs", 18, 27)
                         }
             };
 
@@ -410,7 +478,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 21, 24)
+                            new DiagnosticResultLocation("Test0.cs", 22, 24)
                         }
             };
 
@@ -443,7 +511,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 21, 27)
+                            new DiagnosticResultLocation("Test0.cs", 22, 27)
                         }
             };
 
@@ -473,7 +541,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 19, 23)
+                            new DiagnosticResultLocation("Test0.cs", 20, 23)
                         }
             };
 
@@ -507,33 +575,12 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 23, 24)
+                            new DiagnosticResultLocation("Test0.cs", 24, 24)
                         }
             };
 
             VerifyCSharpDiagnostic(test, expected);
         }
-        private string GetCode(string code)
-        {
-            return @"
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
-
-    namespace ConsoleApplication1
-    {
-" + code + @"
-
-        class Program
-        {   
-            public static void Main() {}
-        }
-    }";
-        }
-
         [TestMethod]
         public void IMM006BaseTypeObject()
         {
@@ -583,7 +630,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 17, 15)
+                            new DiagnosticResultLocation("Test0.cs", 18, 15)
                         }
             };
 
@@ -610,7 +657,7 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 17, 15)
+                            new DiagnosticResultLocation("Test0.cs", 18, 15)
                         }
             };
 
@@ -637,12 +684,32 @@ namespace Apex.Analyzers.Immutable.Test
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 17, 15)
+                            new DiagnosticResultLocation("Test0.cs", 18, 15)
                         }
             };
 
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void IMM008TypeInImmutableNamespace()
+        {
+            var test = GetCode(@"
+", "Immutable");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM008",
+                Message = "Type 'Program' must be immutable because it is declared in Immutable namespace",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 15, 15)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
@@ -653,5 +720,28 @@ namespace Apex.Analyzers.Immutable.Test
         {
             return new ApexAnalyzersImmutableAnalyzer();
         }
+
+        private string GetCode(string code, string namesp = "ConsoleApplication1")
+        {
+            return @"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+    using System.Collections.Immutable;
+
+    namespace " + namesp + @"
+    {
+" + code + @"
+
+        class Program
+        {   
+            public static void Main() {}
+        }
+    }";
+        }
+
     }
 }

@@ -40,6 +40,11 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
+            if(HasImmutableNamespace(type))
+            {
+                return true;
+            }
+
             if(HasImmutableAttribute(type))
             {
                 if(type is INamedTypeSymbol nts
@@ -64,18 +69,45 @@ namespace Apex.Analyzers.Immutable.Rules
             return false;
         }
 
+        internal static bool HasImmutableNamespace(ITypeSymbol type)
+        {
+            return type.ContainingNamespace?.Name == "Immutable";
+        }
+
+        internal static bool ShouldCheckMemberTypeForImmutability(ISymbol symbol)
+        {
+            return !symbol.IsStatic
+                && !symbol.GetAttributes().Any(x => x.AttributeClass.Name == "NonSerializedAttribute"
+                    && x.AttributeClass.ContainingNamespace?.Name == "System");
+        }
+
         private static bool IsGenericTypeImmutable(INamedTypeSymbol type)
         {
             var members = type.GetMembers();
             var fields = members.OfType<IFieldSymbol>();
             var autoProperties = members.OfType<IPropertySymbol>().Where(x => IsAutoProperty(x));
 
+            var filter = ShouldCheckTypeForGenericImmutability(type);
+
             var typesToCheck =
-                fields.Where(x => type.TypeArguments.Any(t => t == x.Type)).Select(x => x.Type)
-                .Concat(autoProperties.Where(x => type.TypeArguments.Any(t => t == x.Type)).Select(x => x.Type))
+                fields.Select(x => x.Type).Where(filter)
+                .Concat(autoProperties.Select(x => x.Type).Where(filter))
                 .ToList();
 
             return typesToCheck.All(IsImmutableType);
+        }
+
+        private static Func<ITypeSymbol, bool> ShouldCheckTypeForGenericImmutability(INamedTypeSymbol type)
+        {
+            return t =>
+            {
+                if(type.TypeArguments.Any(x => x == t))
+                {
+                    return true;
+                }
+
+                return t is INamedTypeSymbol nts && nts.IsGenericType;
+            };
         }
 
         private static bool IsWhitelistedType(ITypeSymbol type)

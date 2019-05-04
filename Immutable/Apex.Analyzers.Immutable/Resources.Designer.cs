@@ -249,5 +249,32 @@ namespace Apex.Analyzers.Immutable {
                 return ResourceManager.GetString("IMM007Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types declared in Immutable namespace must be immutable.
+        /// </summary>
+        internal static string IMM008Description {
+            get {
+                return ResourceManager.GetString("IMM008Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; must be immutable because it is declared in Immutable namespace.
+        /// </summary>
+        internal static string IMM008MessageFormat {
+            get {
+                return ResourceManager.GetString("IMM008MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types declared in Immutable namespace must be immutable.
+        /// </summary>
+        internal static string IMM008Title {
+            get {
+                return ResourceManager.GetString("IMM008Title", resourceCulture);
+            }
+        }
     }
 }

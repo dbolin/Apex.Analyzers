@@ -22,6 +22,7 @@ namespace TestHelper
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
         private static readonly MetadataReference AttributeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location);
         private static readonly MetadataReference AnalyzerReference = MetadataReference.CreateFromFile(typeof(ImmutableAttribute).Assembly.Location);
+        private static readonly MetadataReference ImmutableReference = MetadataReference.CreateFromFile(typeof(ImmutableArray<int>).Assembly.Location);
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -159,6 +160,7 @@ namespace TestHelper
                 .AddMetadataReference(projectId, CodeAnalysisReference)
                 .AddMetadataReference(projectId, AnalyzerReference)
                 .AddMetadataReference(projectId, AttributeReference)
+                .AddMetadataReference(projectId, ImmutableReference)
                 .WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.ConsoleApplication, allowUnsafe: true));
 
             int count = 0;
