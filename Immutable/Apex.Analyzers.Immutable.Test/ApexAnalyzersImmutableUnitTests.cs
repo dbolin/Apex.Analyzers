@@ -276,6 +276,34 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [TestMethod]
+        public void IMM003MemberFieldsGenericFromSystemNotImmutableConcrete()
+        {
+            var test = GetCode(@"
+    public class MutableClass
+    {
+    }
+
+    [Immutable]
+    public class Test
+    {
+        private readonly ImmutableSortedDictionary<MutableClass, int> TestValue;
+    }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM003",
+                Message = "Type of field 'TestValue' is not immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 20, 71)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
         public void IMM003MemberFieldsGenericNotImmutableConcretePropogation()
         {
             var test = GetCode(@"

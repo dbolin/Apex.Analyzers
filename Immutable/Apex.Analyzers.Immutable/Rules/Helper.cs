@@ -43,6 +43,12 @@ namespace Apex.Analyzers.Immutable.Rules
 
             if(HasImmutableNamespace(type))
             {
+                if (type is INamedTypeSymbol nts
+                    && nts.IsGenericType)
+                {
+                    return AreGenericTypeArgumentsImmutable(nts, excludedTypes);
+                }
+
                 return true;
             }
 
@@ -101,6 +107,19 @@ namespace Apex.Analyzers.Immutable.Rules
                 .Concat(autoProperties.Select(x => x.Type).Where(filter))
                 .Where(x => !excludedTypes.Contains(x))
                 .ToList();
+
+            return typesToCheck.All(x => IsImmutableType(x, excludedTypes));
+        }
+
+        private static bool AreGenericTypeArgumentsImmutable(INamedTypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
+        {
+            if (excludedTypes == null)
+            {
+                excludedTypes = new HashSet<ITypeSymbol>();
+            }
+            excludedTypes.Add(type);
+
+            var typesToCheck = type.TypeArguments;
 
             return typesToCheck.All(x => IsImmutableType(x, excludedTypes));
         }
