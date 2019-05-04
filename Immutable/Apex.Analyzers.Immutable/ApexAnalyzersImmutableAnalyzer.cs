@@ -12,7 +12,7 @@ namespace Apex.Analyzers.Immutable
         {
             get
             {
-                return ImmutableArray.Create(IMM001.Rule, IMM002.Rule, IMM003.Rule, IMM004.Rule);
+                return ImmutableArray.Create(IMM001.Rule, IMM002.Rule, IMM003.Rule, IMM004.Rule, IMM005.Rule);
             }
         }
 
@@ -25,6 +25,7 @@ namespace Apex.Analyzers.Immutable
             IMM002.Initialize(context);
             IMM003.Initialize(context);
             IMM004.Initialize(context);
+            IMM005.Initialize(context);
         }
     }
 }

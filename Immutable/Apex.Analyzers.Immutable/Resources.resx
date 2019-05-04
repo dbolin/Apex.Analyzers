@@ -156,4 +156,13 @@
   <data name="IMM004Title" xml:space="preserve">
     <value>Types of auto properties in an immutable type must be immutable</value>
   </data>
+  <data name="IMM005Description" xml:space="preserve">
+    <value>'This' should not be passed out of the constructor of an immutable type</value>
+  </data>
+  <data name="IMM005MessageFormat" xml:space="preserve">
+    <value>Possibly incorrect usage of 'this' in the constructor of an immutable type</value>
+  </data>
+  <data name="IMM005Title" xml:space="preserve">
+    <value>'This' should not be passed out of the constructor of an immutable type</value>
+  </data>
 </root>

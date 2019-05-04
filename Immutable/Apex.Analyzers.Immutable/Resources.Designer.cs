@@ -168,5 +168,32 @@ namespace Apex.Analyzers.Immutable {
                 return ResourceManager.GetString("IMM004Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;This&apos; should not be passed out of the constructor of an immutable type.
+        /// </summary>
+        internal static string IMM005Description {
+            get {
+                return ResourceManager.GetString("IMM005Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Possibly incorrect usage of &apos;this&apos; in the constructor of an immutable type.
+        /// </summary>
+        internal static string IMM005MessageFormat {
+            get {
+                return ResourceManager.GetString("IMM005MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;This&apos; should not be passed out of the constructor of an immutable type.
+        /// </summary>
+        internal static string IMM005Title {
+            get {
+                return ResourceManager.GetString("IMM005Title", resourceCulture);
+            }
+        }
     }
 }

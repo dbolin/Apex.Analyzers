@@ -15,7 +15,8 @@ namespace Apex.Analyzers.Immutable
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ApexAnalyzersImmutableCodeFixProvider)), Shared]
     public class ApexAnalyzersImmutableCodeFixProvider : CodeFixProvider
     {
-        private const string title = "Make readonly";
+        private const string titleReadonly = "Make readonly";
+        private const string titleSetAccessor = "Remove set accessor";
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
@@ -43,9 +44,9 @@ namespace Apex.Analyzers.Immutable
                 // Register a code action that will invoke the fix.
                 context.RegisterCodeFix(
                     CodeAction.Create(
-                        title: title,
+                        title: titleReadonly,
                         createChangedDocument: c => AddReadonlyModifierAsync(context.Document, declaration, c),
-                        equivalenceKey: title),
+                        equivalenceKey: titleReadonly),
                     diagnostic);
             }
             else if (diagnostic.Id == IMM002.DiagnosticId)
@@ -56,9 +57,9 @@ namespace Apex.Analyzers.Immutable
                 // Register a code action that will invoke the fix.
                 context.RegisterCodeFix(
                     CodeAction.Create(
-                        title: title,
+                        title: titleSetAccessor,
                         createChangedDocument: c => RemoveSetMethodAsync(context.Document, declaration, c),
-                        equivalenceKey: title),
+                        equivalenceKey: titleSetAccessor),
                     diagnostic);
             }
         }

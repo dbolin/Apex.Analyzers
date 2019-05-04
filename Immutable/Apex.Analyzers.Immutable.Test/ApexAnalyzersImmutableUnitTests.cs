@@ -299,6 +299,172 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
+        [TestMethod]
+        public void IMM005NormalConstructor()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            private readonly int x;
+            public Test()
+            {
+                x = 5;
+                this.x = 6;
+            }
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM005NormalConstructor2()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            public static void Method(Test t)
+            {}
+            public static Test Instance = new Test();
+            private readonly int x;
+            public Test()
+            {
+                Method(Instance);
+            }
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM005MethodCallExplicitThisParamInConstructor()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            public static void Method(Test t)
+            {}
+
+            private readonly int x;
+            Test()
+            {
+                Method(this);
+                x = 5;
+            }
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM005",
+                Message = "Possibly incorrect usage of 'this' in the constructor of an immutable type",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 21, 24)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM005MethodCallIndirectThisParamInConstructor()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            public static void Method(Test t)
+            {}
+
+            private readonly int x;
+            Test()
+            {
+                var asd = this;
+                Method(asd);
+                x = 5;
+            }
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM005",
+                Message = "Possibly incorrect usage of 'this' in the constructor of an immutable type",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 21, 27)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM005AssignThisToStaticInConstructor()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            public static Test asd;
+            private readonly int x;
+            Test()
+            {
+                asd = this;
+                x = 5;
+            }
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM005",
+                Message = "Possibly incorrect usage of 'this' in the constructor of an immutable type",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 19, 23)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM005CaptureThisInConstructor()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            public static void Method(Func<int> t)
+            {
+                t();
+            }
+
+            private readonly int x;
+            Test()
+            {
+                Method(() => this.x);
+                x = 5;
+            }
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM005",
+                Message = "Possibly incorrect usage of 'this' in the constructor of an immutable type",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 23, 24)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
         private string GetCode(string code)
         {
             return @"
