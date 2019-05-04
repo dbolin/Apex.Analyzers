@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
@@ -8,16 +8,15 @@
 
   <PropertyGroup>
     <PackageId>Apex.Analyzers.Immutable</PackageId>
-    <PackageVersion>1.0.0.0</PackageVersion>
+    <PackageVersion>0.9.0.0</PackageVersion>
     <Authors>Luxor</Authors>
-    <PackageLicenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</PackageLicenseUrl>
-    <PackageProjectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</PackageProjectUrl>
-    <PackageIconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</PackageIconUrl>
-    <RepositoryUrl>http://REPOSITORY_URL_HERE_OR_DELETE_THIS_LINE</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/dbolin/Apex.Analyzers/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/dbolin/Apex.Analyzers</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dbolin/Apex.Analyzers</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Apex.Analyzers.Immutable</Description>
-    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
-    <Copyright>Copyright</Copyright>
+    <Description>Roslyn powered analyzers for C# to support convention defined architecture</Description>
+    <Copyright>Copyright (c) 2019 Dominic Bolin</Copyright>
     <PackageTags>Apex.Analyzers.Immutable, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
