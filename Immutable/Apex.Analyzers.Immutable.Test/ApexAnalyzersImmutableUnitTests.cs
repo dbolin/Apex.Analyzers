@@ -268,7 +268,7 @@ namespace Apex.Analyzers.Immutable.Test
             var expected = new DiagnosticResult
             {
                 Id = "IMM003",
-                Message = "Type of field 'TestValue' is not immutable",
+                Message = "Type of field 'TestValue' is not immutable because type argument 'MutableClass' is not immutable",
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
@@ -296,7 +296,7 @@ namespace Apex.Analyzers.Immutable.Test
             var expected = new DiagnosticResult
             {
                 Id = "IMM003",
-                Message = "Type of field 'TestValue' is not immutable",
+                Message = "Type of field 'TestValue' is not immutable because type argument 'MutableClass' is not immutable",
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
@@ -337,7 +337,7 @@ namespace Apex.Analyzers.Immutable.Test
             var expected = new DiagnosticResult
             {
                 Id = "IMM003",
-                Message = "Type of field 'TestValue' is not immutable",
+                Message = "Type of field 'TestValue' is not immutable because type argument 'MutableClass' is not immutable",
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
@@ -386,7 +386,7 @@ namespace Apex.Analyzers.Immutable.Test
             var expected = new DiagnosticResult
             {
                 Id = "IMM003",
-                Message = "Type of field 'TestValue' is not immutable",
+                Message = "Type of field 'TestValue' is not immutable because type argument 'MutableClass' is not immutable",
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
@@ -735,6 +735,38 @@ namespace Apex.Analyzers.Immutable.Test
                 Locations =
                     new[] {
                             new DiagnosticResultLocation("Test0.cs", 18, 15)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM006BaseTypeNotImmutableGeneric()
+        {
+            var test = GetCode(@"
+        class MutableClass {
+            public int X;
+        }
+        [Immutable]
+        class Test1<T>
+        {
+            public readonly T Value;
+        }
+
+        [Immutable]
+        class Test2 : Test1<MutableClass>
+        {
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM006",
+                Message = "Type 'Test2' base type must be 'object' or immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 23, 15)
                         }
             };
 

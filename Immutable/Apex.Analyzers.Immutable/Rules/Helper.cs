@@ -34,7 +34,7 @@ namespace Apex.Analyzers.Immutable.Rules
             return result != null && result.Any();
         }
 
-        internal static bool IsImmutableType(ITypeSymbol type, Compilation compilation, HashSet<ITypeSymbol> excludedTypes = null)
+        internal static bool IsImmutableType(ITypeSymbol type, Compilation compilation, ref string genericTypeParameter, HashSet<ITypeSymbol> excludedTypes = null)
         {
             if (type.TypeKind == TypeKind.Dynamic)
             {
@@ -51,7 +51,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 if (type is INamedTypeSymbol nts
                     && nts.IsGenericType)
                 {
-                    return AreGenericTypeArgumentsImmutable(nts, compilation, excludedTypes);
+                    return AreGenericTypeArgumentsImmutable(nts, compilation, ref genericTypeParameter, excludedTypes);
                 }
 
                 return true;
@@ -62,7 +62,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 if(type is INamedTypeSymbol nts
                     && nts.IsGenericType)
                 {
-                    return IsGenericTypeImmutable(nts, compilation, excludedTypes);
+                    return IsGenericTypeImmutable(nts, compilation, ref genericTypeParameter, excludedTypes);
                 }
 
                 return true;
@@ -95,7 +95,9 @@ namespace Apex.Analyzers.Immutable.Rules
                     && x.AttributeClass.ContainingNamespace?.Name == "System");
         }
 
-        private static bool IsGenericTypeImmutable(INamedTypeSymbol type, Compilation compilation, HashSet<ITypeSymbol> excludedTypes = null)
+        private static bool IsGenericTypeImmutable(INamedTypeSymbol type, Compilation compilation,
+            ref string genericTypeParameter,
+            HashSet<ITypeSymbol> excludedTypes = null)
         {
             if(excludedTypes == null)
             {
@@ -115,10 +117,26 @@ namespace Apex.Analyzers.Immutable.Rules
                 .Where(x => !excludedTypes.Contains(x))
                 .ToList();
 
-            return typesToCheck.All(x => IsImmutableType(x, compilation, excludedTypes));
+            var result = true;
+            foreach (var typeToCheck in typesToCheck)
+            {
+                result = IsImmutableType(typeToCheck, compilation, ref genericTypeParameter, excludedTypes);
+                if (!result)
+                {
+                    if (genericTypeParameter == null)
+                    {
+                        genericTypeParameter = typeToCheck.Name;
+                    }
+                    break;
+                }
+            }
+
+            return result;
         }
 
-        private static bool AreGenericTypeArgumentsImmutable(INamedTypeSymbol type, Compilation compilation, HashSet<ITypeSymbol> excludedTypes = null)
+        private static bool AreGenericTypeArgumentsImmutable(INamedTypeSymbol type, Compilation compilation,
+            ref string genericTypeParameter,
+            HashSet<ITypeSymbol> excludedTypes = null)
         {
             if (excludedTypes == null)
             {
@@ -128,7 +146,21 @@ namespace Apex.Analyzers.Immutable.Rules
 
             var typesToCheck = type.TypeArguments;
 
-            return typesToCheck.All(x => IsImmutableType(x, compilation, excludedTypes));
+            var result = true;
+            foreach(var typeToCheck in typesToCheck)
+            {
+                result = IsImmutableType(typeToCheck, compilation, ref genericTypeParameter, excludedTypes);
+                if(!result)
+                {
+                    if (genericTypeParameter == null)
+                    {
+                        genericTypeParameter = typeToCheck.Name;
+                    }
+                    break;
+                }
+            }
+
+            return result;
         }
 
         private static Func<ITypeSymbol, bool> ShouldCheckTypeForGenericImmutability(INamedTypeSymbol type)

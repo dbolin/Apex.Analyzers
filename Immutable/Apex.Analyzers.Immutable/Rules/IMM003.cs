@@ -9,11 +9,14 @@ namespace Apex.Analyzers.Immutable.Rules
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.IMM003Title), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.IMM003MessageFormat), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString MessageFormatGeneric = new LocalizableResourceString(nameof(Resources.IMM003MessageFormatGeneric), Resources.ResourceManager, typeof(Resources));
 
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.IMM003Description), Resources.ResourceManager, typeof(Resources));
         private const string Category = "Architecture";
 
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
+        public static DiagnosticDescriptor RuleGeneric = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormatGeneric, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
+
         internal static void Initialize(AnalysisContext context)
         {
             context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Field);
@@ -28,12 +31,22 @@ namespace Apex.Analyzers.Immutable.Rules
                 return;
             }
 
+            string genericTypeArgument = null;
+
             if(Helper.HasImmutableAttribute(containingType)
                 && Helper.ShouldCheckMemberTypeForImmutability(symbol)
-                && !Helper.IsImmutableType(symbol.Type, context.Compilation))
+                && !Helper.IsImmutableType(symbol.Type, context.Compilation, ref genericTypeArgument))
             {
-                var diagnostic = Diagnostic.Create(Rule, symbol.Locations[0], symbol.Name);
-                context.ReportDiagnostic(diagnostic);
+                if(genericTypeArgument != null)
+                {
+                    var diagnostic = Diagnostic.Create(RuleGeneric, symbol.Locations[0], symbol.Name, genericTypeArgument);
+                    context.ReportDiagnostic(diagnostic);
+                }
+                else
+                {
+                    var diagnostic = Diagnostic.Create(Rule, symbol.Locations[0], symbol.Name);
+                    context.ReportDiagnostic(diagnostic);
+                }
             }
         }
     }

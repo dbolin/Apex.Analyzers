@@ -144,6 +144,9 @@
   <data name="IMM003MessageFormat" xml:space="preserve">
     <value>Type of field '{0}' is not immutable</value>
   </data>
+  <data name="IMM003MessageFormatGeneric" xml:space="preserve">
+    <value>Type of field '{0}' is not immutable because type argument '{1}' is not immutable</value>
+  </data>
   <data name="IMM003Title" xml:space="preserve">
     <value>Types of fields in an immutable type must be immutable</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="IMM004MessageFormat" xml:space="preserve">
     <value>Type of auto property '{0}' is not immutable</value>
+  </data>
+  <data name="IMM004MessageFormatGeneric" xml:space="preserve">
+    <value>Type of auto property '{0}' is not immutable because type argument '{1}' is not immutable</value>
   </data>
   <data name="IMM004Title" xml:space="preserve">
     <value>Types of auto properties in an immutable type must be immutable</value>

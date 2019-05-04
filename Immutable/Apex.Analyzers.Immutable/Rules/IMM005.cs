@@ -25,7 +25,7 @@ namespace Apex.Analyzers.Immutable.Rules
 
         private static void AnalyzeOperation(OperationAnalysisContext context)
         {
-            if(!Helper.HasImmutableAttribute(context.Operation.Type))
+            if(!Helper.HasImmutableAttribute(context.ContainingSymbol?.ContainingType))
             {
                 return;
             }

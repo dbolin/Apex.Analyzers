@@ -134,6 +134,15 @@ namespace Apex.Analyzers.Immutable {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type of field &apos;{0}&apos; is not immutable because type argument &apos;{1}&apos; is not immutable.
+        /// </summary>
+        internal static string IMM003MessageFormatGeneric {
+            get {
+                return ResourceManager.GetString("IMM003MessageFormatGeneric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Types of fields in an immutable type must be immutable.
         /// </summary>
         internal static string IMM003Title {
@@ -157,6 +166,15 @@ namespace Apex.Analyzers.Immutable {
         internal static string IMM004MessageFormat {
             get {
                 return ResourceManager.GetString("IMM004MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type of auto property &apos;{0}&apos; is not immutable because type argument &apos;{1}&apos; is not immutable.
+        /// </summary>
+        internal static string IMM004MessageFormatGeneric {
+            get {
+                return ResourceManager.GetString("IMM004MessageFormatGeneric", resourceCulture);
             }
         }
         
