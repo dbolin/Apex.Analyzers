@@ -14,5 +14,4 @@ Provides an `ImmutableAttribute` type which can be applied to classes, structs, 
 | `IMM005` | Warning | 'This' should not be passed out of the constructor of an immutable type
 | `IMM006` | Error | The base type of an immutable type must be 'object' or immutable
 | `IMM007` | Error | Types derived from an immutable type must be immutable
-| `IMM008` | Error | Types declared in `Immutable` namespace must be immutable
 
