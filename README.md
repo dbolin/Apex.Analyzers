@@ -3,7 +3,7 @@ Roslyn powered analyzers for C# to support convention defined architecture
 
 ## Immutable Types
 
-Provides an `ImmutableAttribute` type which can be applied to classes and structs.  The analyzer ensures that the following rules hold for types marked with the attribute.
+Provides an `ImmutableAttribute` type which can be applied to classes, structs, and interfaces.  The analyzer ensures that the following rules hold for types marked with the attribute.
 
 | ID | Severity | Rule
 | --- | --- | --- |
