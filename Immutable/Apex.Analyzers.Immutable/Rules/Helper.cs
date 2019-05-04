@@ -78,7 +78,9 @@ namespace Apex.Analyzers.Immutable.Rules
 
         internal static bool HasImmutableNamespace(ITypeSymbol type)
         {
-            return type.ContainingNamespace?.Name == "Immutable";
+            return type.ContainingNamespace?.Name == "Immutable"
+                && type.ContainingNamespace?.ContainingNamespace?.Name == "Collections"
+                && type.ContainingNamespace?.ContainingNamespace?.ContainingNamespace?.Name == "System";
         }
 
         internal static bool ShouldCheckMemberTypeForImmutability(ISymbol symbol)

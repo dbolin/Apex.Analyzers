@@ -768,26 +768,6 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
-        public void IMM008TypeInImmutableNamespace()
-        {
-            var test = GetCode(@"
-", "Immutable");
-            var expected = new DiagnosticResult
-            {
-                Id = "IMM008",
-                Message = "Type 'Program' must be immutable because it is declared in Immutable namespace",
-                Severity = DiagnosticSeverity.Error,
-                Locations =
-                    new[] {
-                            new DiagnosticResultLocation("Test0.cs", 15, 15)
-                        }
-            };
-
-            VerifyCSharpDiagnostic(test, expected);
-        }
-
-
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
             return new ApexAnalyzersImmutableCodeFixProvider();
