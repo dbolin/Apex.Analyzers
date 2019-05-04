@@ -662,6 +662,29 @@ namespace Apex.Analyzers.Immutable.Test
 
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void IMM005CaptureThisInConstructorAllowed()
+        {
+            var test = GetCode(@"
+        class Test
+        {
+            public static void Method(Func<int> t)
+            {
+                t();
+            }
+
+            private readonly int x;
+            Test()
+            {
+                Method(() => this.x);
+                x = 5;
+            }
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
         [TestMethod]
         public void IMM006BaseTypeObject()
         {

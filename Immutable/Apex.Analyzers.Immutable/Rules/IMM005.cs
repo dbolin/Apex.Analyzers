@@ -25,6 +25,11 @@ namespace Apex.Analyzers.Immutable.Rules
 
         private static void AnalyzeOperation(OperationAnalysisContext context)
         {
+            if(!Helper.HasImmutableAttribute(context.Operation.Type))
+            {
+                return;
+            }
+
             CheckOperation(context.Operation, context, false);
         }
 
