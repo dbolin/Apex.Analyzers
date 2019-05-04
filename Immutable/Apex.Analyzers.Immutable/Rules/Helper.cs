@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -29,8 +30,24 @@ namespace Apex.Analyzers.Immutable.Rules
 
         internal static bool IsImmutableType(ITypeSymbol type)
         {
+            if (type.TypeKind == TypeKind.Dynamic)
+            {
+                return false;
+            }
+
+            if (type.TypeKind == TypeKind.TypeParameter)
+            {
+                return true;
+            }
+
             if(HasImmutableAttribute(type))
             {
+                if(type is INamedTypeSymbol nts
+                    && nts.IsGenericType)
+                {
+                    return IsGenericTypeImmutable(nts);
+                }
+
                 return true;
             }
 
@@ -39,12 +56,26 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
-            if(type.BaseType.SpecialType == SpecialType.System_Enum)
+            if(type.BaseType?.SpecialType == SpecialType.System_Enum)
             {
                 return true;
             }
 
             return false;
+        }
+
+        private static bool IsGenericTypeImmutable(INamedTypeSymbol type)
+        {
+            var members = type.GetMembers();
+            var fields = members.OfType<IFieldSymbol>();
+            var autoProperties = members.OfType<IPropertySymbol>().Where(x => IsAutoProperty(x));
+
+            var typesToCheck =
+                fields.Where(x => type.TypeArguments.Any(t => t == x.Type)).Select(x => x.Type)
+                .Concat(autoProperties.Where(x => type.TypeArguments.Any(t => t == x.Type)).Select(x => x.Type))
+                .ToList();
+
+            return typesToCheck.All(IsImmutableType);
         }
 
         private static bool IsWhitelistedType(ITypeSymbol type)
