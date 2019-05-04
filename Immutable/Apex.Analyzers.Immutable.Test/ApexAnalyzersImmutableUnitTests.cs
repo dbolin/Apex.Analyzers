@@ -486,6 +486,116 @@ namespace Apex.Analyzers.Immutable.Test
     }";
         }
 
+        [TestMethod]
+        public void IMM006BaseTypeObject()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test : object
+        {
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM006BaseTypeImmutable()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test1
+        {
+        }
+
+        [Immutable]
+        class Test2 : Test1
+        {
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM006BaseTypeNotImmutable()
+        {
+            var test = GetCode(@"
+        class Test1
+        {
+        }
+
+        [Immutable]
+        class Test2 : Test1
+        {
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM006",
+                Message = "Type 'Test2' base type must be 'object' or immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 17, 15)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM007DerivedTypeNotImmutable()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test1
+        {
+        }
+
+        class Test2 : Test1
+        {
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM007",
+                Message = "Type 'Test2' must be immutable because it derives from 'Test1'",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 17, 15)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM007DerivedFromInterfaceTypeNotImmutable()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        interface Test1
+        {
+        }
+
+        class Test2 : Test1
+        {
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM007",
+                Message = "Type 'Test2' must be immutable because it derives from 'Test1'",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 17, 15)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
             return new ApexAnalyzersImmutableCodeFixProvider();

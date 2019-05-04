@@ -195,5 +195,59 @@ namespace Apex.Analyzers.Immutable {
                 return ResourceManager.GetString("IMM005Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The base type of an immutable type must be &apos;object&apos; or immutable.
+        /// </summary>
+        internal static string IMM006Description {
+            get {
+                return ResourceManager.GetString("IMM006Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; base type must be &apos;object&apos; or immutable.
+        /// </summary>
+        internal static string IMM006MessageFormat {
+            get {
+                return ResourceManager.GetString("IMM006MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The base type of an immutable type must be &apos;object&apos; or immutable.
+        /// </summary>
+        internal static string IMM006Title {
+            get {
+                return ResourceManager.GetString("IMM006Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types derived from an immutable type must be immutable.
+        /// </summary>
+        internal static string IMM007Description {
+            get {
+                return ResourceManager.GetString("IMM007Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; must be immutable because it derives from &apos;{1}&apos;.
+        /// </summary>
+        internal static string IMM007MessageFormat {
+            get {
+                return ResourceManager.GetString("IMM007MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types derived from an immutable type must be immutable.
+        /// </summary>
+        internal static string IMM007Title {
+            get {
+                return ResourceManager.GetString("IMM007Title", resourceCulture);
+            }
+        }
     }
 }
