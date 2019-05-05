@@ -5,6 +5,8 @@ Roslyn powered analyzers for C# to support convention defined architecture
 
 [![Build Status](https://numenfall.visualstudio.com/Games/_apis/build/status/Apex.Analyzers-CI?branchName=master)](https://numenfall.visualstudio.com/Games/_build/latest?definitionId=5&branchName=master)
 
+[Nuget Package](https://www.nuget.org/packages/Apex.Serialization/)
+
 Provides an `ImmutableAttribute` type which can be applied to classes, structs, and interfaces.  The analyzer ensures that the following rules hold for types marked with the attribute.
 
 | ID | Severity | Rule | Code Fix
