@@ -491,28 +491,32 @@ namespace Apex.Analyzers.Immutable.Test
         public void IMM004MemberPropsWhitelisted()
         {
             var test = GetCode(@"
-        enum TestEnum {
+        public enum TestEnum {
             A
         }
         [Immutable]
-        class Test
+        public sealed class Test
         {
-            private TestEnum x {get;}
-            private byte a {get;}
-            private char b {get;}
-            private sbyte c {get;}
-            private short d {get;}
-            private ushort e {get;}
-            private int f {get;}
-            private uint g {get;}
-            private long h {get;}
-            private ulong i {get;}
-            private string j {get;}
-            private DateTime k {get;}
-            private float l {get;}
-            private double m {get;}
-            private decimal n {get;}
-            private object o {get;}
+            public TestEnum x {get;}
+            public byte a {get;}
+            public char b {get;}
+            public sbyte c {get;}
+            public short d {get;}
+            public ushort e {get;}
+            public int f {get;}
+            public uint g {get;}
+            public long h {get;}
+            public ulong i {get;}
+            public string j {get;}
+            public DateTime k {get;}
+            public float l {get;}
+            public double m {get;}
+            public decimal n {get;}
+            public object o {get;}
+            public Guid p {get;}
+            public TimeSpan q {get;}
+            public DateTimeOffset r {get;}
+            public int? s {get;}
         }
 ");
             VerifyCSharpDiagnostic(test);
