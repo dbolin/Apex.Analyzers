@@ -750,6 +750,18 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [TestMethod]
+        public void IMM006BaseTypeStruct()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        struct Test
+        {
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
         public void IMM006BaseTypeObject()
         {
             var test = GetCode(@"

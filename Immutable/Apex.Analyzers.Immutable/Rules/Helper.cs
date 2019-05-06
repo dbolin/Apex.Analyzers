@@ -188,8 +188,9 @@ namespace Apex.Analyzers.Immutable.Rules
                     return true;
                 case SpecialType.System_MulticastDelegate:
                 case SpecialType.System_Delegate:
-                case SpecialType.System_ValueType:
                     break;
+                case SpecialType.System_ValueType:
+                    return true;
                 case SpecialType.System_Void:
                 case SpecialType.System_Boolean:
                 case SpecialType.System_Char:
