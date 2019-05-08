@@ -226,6 +226,7 @@ namespace Apex.Analyzers.Immutable.Test
             private readonly TimeSpan q;
             private readonly DateTimeOffset r;
             private readonly int? s;
+            private readonly KeyValuePair<int, string> t;
         }
 ");
             VerifyCSharpDiagnostic(test);
@@ -471,9 +472,10 @@ namespace Apex.Analyzers.Immutable.Test
         class Test
         {
             private readonly TestI x;
+            private readonly KeyValuePair<int, TestI> y;
         }
 ");
-            var expected = new DiagnosticResult
+            var expected1 = new DiagnosticResult
             {
                 Id = "IMM003",
                 Message = "Type of field 'x' is not immutable",
@@ -484,7 +486,18 @@ namespace Apex.Analyzers.Immutable.Test
                         }
             };
 
-            VerifyCSharpDiagnostic(test, expected);
+            var expected2 = new DiagnosticResult
+            {
+                Id = "IMM003",
+                Message = "Type of field 'y' is not immutable because type argument 'TestI' is not immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 19, 55)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected1, expected2);
         }
 
         [TestMethod]
@@ -562,6 +575,48 @@ namespace Apex.Analyzers.Immutable.Test
             };
 
             VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM004MemberPropsGenericNotImmutable()
+        {
+            var test = GetCode(@"
+        class TestI {
+        }
+        [Immutable]
+        class Test
+        {
+            private ImmutableDictionary<Guid, TestI> x {get; }
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM004",
+                Message = "Type of auto property 'x' is not immutable because type argument 'TestI' is not immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 18, 54)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void IMM004MemberPropsGenericImmutable()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class TestI {
+        }
+        [Immutable]
+        class Test
+        {
+            private ImmutableArray<TestI>? x {get; }
+        }
+");
+            VerifyCSharpDiagnostic(test);
         }
 
         [TestMethod]

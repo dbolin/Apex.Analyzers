@@ -46,7 +46,8 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
-            if(HasImmutableNamespace(type) || type.OriginalDefinition == GetNullableType(compilation))
+            if(HasImmutableNamespace(type) || type.OriginalDefinition == GetNullableType(compilation)
+                || type.OriginalDefinition == GetKeyValuePairType(compilation))
             {
                 if (type is INamedTypeSymbol nts
                     && nts.IsGenericType)
@@ -299,6 +300,13 @@ namespace Apex.Analyzers.Immutable.Rules
         private static ITypeSymbol GetNullableType(Compilation compilation)
         {
             return _nullableType ?? (_nullableType = compilation.GetTypeByMetadataName("System.Nullable`1"));
+        }
+
+        private static ITypeSymbol _kvpType;
+
+        private static ITypeSymbol GetKeyValuePairType(Compilation compilation)
+        {
+            return _kvpType ?? (_kvpType = compilation.GetTypeByMetadataName("System.Collections.Generic.KeyValuePair`2"));
         }
     }
 }
