@@ -28,7 +28,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 return;
             }
 
-            if(Helper.HasImmutableAttribute(containingType)
+            if(Helper.HasImmutableAttributeAndShouldVerify(containingType)
                 && !symbol.IsReadOnly
                 && Helper.ShouldCheckMemberTypeForImmutability(symbol))
             {

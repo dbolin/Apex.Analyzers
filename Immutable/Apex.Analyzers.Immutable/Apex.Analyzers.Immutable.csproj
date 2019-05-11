@@ -7,8 +7,8 @@
 
   <PropertyGroup>
     <PackageId>Apex.Analyzers.Immutable</PackageId>
-    <PackageVersion>0.9.2</PackageVersion>
-    <Authors>Luxor</Authors>
+    <PackageVersion>0.9.3</PackageVersion>
+    <Authors>Dominic Bolin</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dbolin/Apex.Analyzers</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dbolin/Apex.Analyzers</RepositoryUrl>
@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Apex.Analyzers.Immutable.Attributes" Version="0.9.0.3" />
+    <PackageReference Include="Apex.Analyzers.Immutable.Attributes" Version="0.9.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.10" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />

@@ -32,7 +32,7 @@ namespace Apex.Analyzers.Immutable.Rules
             }
 
             string genericTypeArgument = null;
-            if(Helper.HasImmutableAttribute(containingType)
+            if(Helper.HasImmutableAttributeAndShouldVerify(containingType)
                 && Helper.ShouldCheckMemberTypeForImmutability(symbol)
                 && !Helper.IsImmutableType(symbol.Type, context.Compilation, ref genericTypeArgument)
                 && Helper.IsAutoProperty(symbol))

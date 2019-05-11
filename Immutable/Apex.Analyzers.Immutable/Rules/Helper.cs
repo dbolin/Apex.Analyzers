@@ -8,9 +8,22 @@ namespace Apex.Analyzers.Immutable.Rules
 {
     internal static class Helper
     {
-        internal static bool HasImmutableAttribute(ITypeSymbol type)
+        internal static bool HasImmutableAttributeAndShouldVerify(ITypeSymbol type)
         {
             if(type == null)
+            {
+                return false;
+            }
+
+            var attributes = type.GetAttributes();
+            return attributes.Any(x => x.AttributeClass?.Name == "ImmutableAttribute"
+                && x.AttributeClass?.ContainingNamespace?.Name == "System"
+                && (x.ConstructorArguments.Length == 0 || (x.ConstructorArguments.First().Value as bool?) == false));
+        }
+
+        internal static bool HasImmutableAttribute(ITypeSymbol type)
+        {
+            if (type == null)
             {
                 return false;
             }
