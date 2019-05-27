@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Apex.Analyzers.Immutable.Attributes</PackageId>
-    <PackageVersion>0.9.3</PackageVersion>
+    <PackageVersion>1.0.0</PackageVersion>
     <Authors>Dominic Bolin</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dbolin/Apex.Analyzers</PackageProjectUrl>
