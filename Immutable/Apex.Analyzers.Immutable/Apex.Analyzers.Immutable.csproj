@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Apex.Analyzers.Immutable.Attributes" Version="0.9.3" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.1.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
