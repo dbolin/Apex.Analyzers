@@ -18,6 +18,8 @@
     <Copyright>Copyright (c) 2019 Dominic Bolin</Copyright>
     <PackageTags>Apex.Analyzers.Immutable, immutable, architecture, design, csharp, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Apex.Analyzers.Immutable.Attributes.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   
 </Project>

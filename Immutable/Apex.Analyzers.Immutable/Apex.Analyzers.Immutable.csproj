@@ -18,11 +18,13 @@
     <Copyright>Copyright (c) 2019 Dominic Bolin</Copyright>
     <PackageTags>Apex.Analyzers.Immutable, immutable, architecture, design, csharp, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Apex.Analyzers.Immutable.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Apex.Analyzers.Immutable.Attributes" Version="0.9.3" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.2" PrivateAssets="all" />
+    <PackageReference Include="Apex.Analyzers.Immutable.Attributes" Version="1.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.1.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
