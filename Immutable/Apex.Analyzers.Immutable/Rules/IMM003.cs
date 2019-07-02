@@ -19,6 +19,8 @@ namespace Apex.Analyzers.Immutable.Rules
 
         internal static void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
+            context.EnableConcurrentExecution();
             context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Field);
         }
 

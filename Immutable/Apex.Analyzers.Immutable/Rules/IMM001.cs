@@ -16,6 +16,8 @@ namespace Apex.Analyzers.Immutable.Rules
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
         internal static void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
+            context.EnableConcurrentExecution();
             context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Field);
         }
 
