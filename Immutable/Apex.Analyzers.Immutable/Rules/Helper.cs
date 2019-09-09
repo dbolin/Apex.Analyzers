@@ -73,10 +73,14 @@ namespace Apex.Analyzers.Immutable.Rules
 
             if (HasImmutableAttribute(type))
             {
-                if(HasImmutableAttributeAndShouldVerify(type)
-                    && type is INamedTypeSymbol nts
+                if(type is INamedTypeSymbol nts
                     && nts.IsGenericType)
                 {
+                    if(!HasImmutableAttributeAndShouldVerify(type))
+                    {
+                        return AreGenericTypeArgumentsImmutable(nts, compilation, ref genericTypeParameter, excludedTypes);
+                    }
+
                     return IsGenericTypeImmutable(nts, compilation, ref genericTypeParameter, excludedTypes);
                 }
 

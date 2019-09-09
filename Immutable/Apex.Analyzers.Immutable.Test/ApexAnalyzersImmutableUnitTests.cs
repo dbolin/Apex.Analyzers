@@ -310,7 +310,7 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [TestMethod]
-        public void IMM003MemberFieldsNotImmutableNestedInGenericOnFaith()
+        public void IMM003MemberFieldsNotImmutableNestedInGenericOnFaith_should_not_validate_non_type_arguments()
         {
             var test = GetCode(@"
     [Immutable(onFaith: true)]
@@ -331,6 +331,41 @@ namespace Apex.Analyzers.Immutable.Test
     }
 ");
             VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void IMM003MemberFieldsNotImmutableNestedInGenericOnFaith_should_validate_type_arguments()
+        {
+            var test = GetCode(@"
+    public class MutableClass
+    {
+    }
+
+    [Immutable(onFaith: true)]
+    public class Class1<T>
+    {
+        private readonly int x;
+        private readonly T Value;
+    }
+
+    [Immutable]
+    public class Test
+    {
+        private readonly Class1<MutableClass> TestValue;
+    }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM003",
+                Message = "Type of field 'TestValue' is not immutable because type argument 'MutableClass' is not immutable",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 27, 47)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
