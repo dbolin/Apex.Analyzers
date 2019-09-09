@@ -310,6 +310,30 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [TestMethod]
+        public void IMM003MemberFieldsNotImmutableNestedInGenericOnFaith()
+        {
+            var test = GetCode(@"
+    [Immutable(onFaith: true)]
+    public class Class1<T>
+    {
+        public class MutableClass
+        {
+        }
+
+        private readonly int x;
+        private readonly MutableClass Value;
+    }
+
+    [Immutable]
+    public class Test
+    {
+        private readonly Class1<int> TestValue;
+    }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
         public void IMM003MemberFieldsNestedGenericNotImmutableConcrete()
         {
             var test = GetCode(@"
