@@ -1,19 +1,18 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using TestHelper;
 using Apex.Analyzers.Immutable;
+using Xunit;
 
 namespace Apex.Analyzers.Immutable.Test
 {
-    [TestClass]
     public class UnitTest : CodeFixVerifier
     {
 
         //No diagnostics expected to show up
-        [TestMethod]
+        [Fact]
         public void Empty()
         {
             var test = @"namespace Test { public class Program { public static void Main() {} }}";
@@ -21,7 +20,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM001MemberFieldNotReadonly()
         {
             var test = GetCode(@"
@@ -48,7 +47,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpFix(test, fixtest);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM001MemberFieldNotReadonlyNonSerialized()
         {
             var test = GetCode(@"
@@ -62,7 +61,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM001MemberFieldNotReadonlyNonSerializedPublic()
         {
             var test = GetCode(@"
@@ -91,7 +90,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpFix(test, fixtest);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM001MemberFieldReadonly()
         {
             var test = GetCode(@"
@@ -104,7 +103,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM001StaticFieldNotReadonly()
         {
             var test = GetCode(@"
@@ -117,7 +116,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM001ConstField()
         {
             var test = GetCode(@"
@@ -130,7 +129,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM002MemberPropNotReadonly()
         {
             var test = GetCode(@"
@@ -157,7 +156,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpFix(test, fixtest);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM002MemberPropNotReadonlyNotAuto()
         {
             var test = GetCode(@"
@@ -170,7 +169,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM002MemberPropReadonly()
         {
             var test = GetCode(@"
@@ -183,7 +182,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM002StaticPropNotReadonly()
         {
             var test = GetCode(@"
@@ -196,7 +195,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsWhitelisted()
         {
             var test = GetCode(@"
@@ -232,7 +231,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsImmutable()
         {
             var test = GetCode(@"
@@ -248,7 +247,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsImmutableNamespace()
         {
             var test = GetCode(@"
@@ -261,7 +260,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsGeneric()
         {
             var test = GetCode(@"
@@ -274,7 +273,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsGenericNotImmutableConcrete()
         {
             var test = GetCode(@"
@@ -309,7 +308,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsNotImmutableNestedInGenericOnFaith_should_not_validate_non_type_arguments()
         {
             var test = GetCode(@"
@@ -333,7 +332,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsNotImmutableNestedInGenericOnFaith_should_validate_type_arguments()
         {
             var test = GetCode(@"
@@ -368,7 +367,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsNestedGenericNotImmutableConcrete()
         {
             var test = GetCode(@"
@@ -403,7 +402,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsGenericFromSystemNotImmutableConcrete()
         {
             var test = GetCode(@"
@@ -431,7 +430,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsGenericNotImmutableConcretePropogation()
         {
             var test = GetCode(@"
@@ -472,7 +471,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsGenericNotImmutableConcretePropogationLoop()
         {
             var test = GetCode(@"
@@ -521,7 +520,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM003MemberFieldsNotImmutable()
         {
             var test = GetCode(@"
@@ -559,7 +558,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected1, expected2);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM004MemberPropsWhitelisted()
         {
             var test = GetCode(@"
@@ -594,7 +593,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM004MemberPropsImmutable()
         {
             var test = GetCode(@"
@@ -610,7 +609,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM004MemberPropsNotImmutable()
         {
             var test = GetCode(@"
@@ -636,7 +635,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM004MemberPropsGenericNotImmutable()
         {
             var test = GetCode(@"
@@ -662,7 +661,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM004MemberPropsGenericImmutable()
         {
             var test = GetCode(@"
@@ -678,7 +677,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM005NormalConstructor()
         {
             var test = GetCode(@"
@@ -696,7 +695,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM005NormalConstructor2()
         {
             var test = GetCode(@"
@@ -716,7 +715,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM005MethodCallExplicitThisParamInConstructor()
         {
             var test = GetCode(@"
@@ -748,7 +747,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM005MethodCallIndirectThisParamInConstructor()
         {
             var test = GetCode(@"
@@ -781,7 +780,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM005AssignThisToStaticInConstructor()
         {
             var test = GetCode(@"
@@ -811,7 +810,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM005CaptureThisInConstructor()
         {
             var test = GetCode(@"
@@ -845,7 +844,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM005CaptureThisInConstructorAllowed()
         {
             var test = GetCode(@"
@@ -867,7 +866,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM006BaseTypeStruct()
         {
             var test = GetCode(@"
@@ -879,7 +878,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM006BaseTypeObject()
         {
             var test = GetCode(@"
@@ -891,7 +890,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM006BaseTypeImmutable()
         {
             var test = GetCode(@"
@@ -908,7 +907,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM006BaseTypeNotImmutable()
         {
             var test = GetCode(@"
@@ -935,7 +934,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM006BaseTypeNotImmutableGeneric()
         {
             var test = GetCode(@"
@@ -967,7 +966,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM007DerivedTypeNotImmutable()
         {
             var test = GetCode(@"
@@ -994,7 +993,7 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void IMM007DerivedFromInterfaceTypeNotImmutable()
         {
             var test = GetCode(@"
