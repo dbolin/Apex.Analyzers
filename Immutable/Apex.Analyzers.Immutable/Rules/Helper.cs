@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -282,7 +282,8 @@ namespace Apex.Analyzers.Immutable.Rules
                 || SymbolEqualityComparer.Default.Equals(GetTimeSpanType(compilation), type)
                 || SymbolEqualityComparer.Default.Equals(GetDateTimeOffsetType(compilation), type)
                 || SymbolEqualityComparer.Default.Equals(GetUriType(compilation), type)
-                || SymbolEqualityComparer.Default.Equals(GetXNameType(compilation), type))
+                || SymbolEqualityComparer.Default.Equals(GetXNameType(compilation), type)
+                )
             {
                 return true;
             }
