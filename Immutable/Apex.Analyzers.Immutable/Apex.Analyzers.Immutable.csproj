@@ -20,6 +20,7 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Apex.Analyzers.Immutable.snk</AssemblyOriginatorKeyFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
