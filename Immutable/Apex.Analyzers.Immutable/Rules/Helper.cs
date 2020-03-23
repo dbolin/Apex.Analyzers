@@ -10,7 +10,7 @@ namespace Apex.Analyzers.Immutable.Rules
     {
         internal static bool HasImmutableAttributeAndShouldVerify(ITypeSymbol type)
         {
-            if(type == null)
+            if (type == null)
             {
                 return false;
             }
@@ -37,7 +37,7 @@ namespace Apex.Analyzers.Immutable.Rules
         {
             var getSyntax = symbol.GetMethod?.DeclaringSyntaxReferences.Select(x => x.GetSyntax());
             var result = getSyntax?.OfType<AccessorDeclarationSyntax>().Where(x => x.Body == null && x.ExpressionBody == null);
-            if(result != null && result.Any())
+            if (result != null && result.Any())
             {
                 return true;
             }
@@ -59,8 +59,8 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
-            if(HasImmutableNamespace(type) || Equals(type.OriginalDefinition, GetNullableType(compilation))
-                || Equals(type.OriginalDefinition, GetKeyValuePairType(compilation)))
+            if (HasImmutableNamespace(type) || SymbolEqualityComparer.Default.Equals(type.OriginalDefinition, GetNullableType(compilation))
+                || SymbolEqualityComparer.Default.Equals(type.OriginalDefinition, GetKeyValuePairType(compilation)))
             {
                 if (type is INamedTypeSymbol nts
                     && nts.IsGenericType)
@@ -73,10 +73,10 @@ namespace Apex.Analyzers.Immutable.Rules
 
             if (HasImmutableAttribute(type))
             {
-                if(type is INamedTypeSymbol nts
+                if (type is INamedTypeSymbol nts
                     && nts.IsGenericType)
                 {
-                    if(!HasImmutableAttributeAndShouldVerify(type))
+                    if (!HasImmutableAttributeAndShouldVerify(type))
                     {
                         return AreGenericTypeArgumentsImmutable(nts, compilation, ref genericTypeParameter, excludedTypes);
                     }
@@ -87,12 +87,12 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
-            if(IsWhitelistedType(type, compilation))
+            if (IsWhitelistedType(type, compilation))
             {
                 return true;
             }
 
-            if(type.BaseType?.SpecialType == SpecialType.System_Enum)
+            if (type.BaseType?.SpecialType == SpecialType.System_Enum)
             {
                 return true;
             }
@@ -119,7 +119,7 @@ namespace Apex.Analyzers.Immutable.Rules
             ref string genericTypeParameter,
             HashSet<ITypeSymbol> excludedTypes = null)
         {
-            if(excludedTypes == null)
+            if (excludedTypes == null)
             {
                 excludedTypes = new HashSet<ITypeSymbol>();
             }
@@ -167,10 +167,10 @@ namespace Apex.Analyzers.Immutable.Rules
             var typesToCheck = type.TypeArguments;
 
             var result = true;
-            foreach(var typeToCheck in typesToCheck)
+            foreach (var typeToCheck in typesToCheck)
             {
                 result = IsImmutableType(typeToCheck, compilation, ref genericTypeParameter, excludedTypes);
-                if(!result)
+                if (!result)
                 {
                     if (genericTypeParameter == null)
                     {
@@ -187,7 +187,7 @@ namespace Apex.Analyzers.Immutable.Rules
         {
             return t =>
             {
-                if(type.TypeArguments.Any(x => Equals(x, t)))
+                if (type.TypeArguments.Any(x => SymbolEqualityComparer.Default.Equals(x, t)))
                 {
                     return true;
                 }
@@ -272,12 +272,17 @@ namespace Apex.Analyzers.Immutable.Rules
                     break;
             }
 
-            if(
-                Equals(GetGuidType(compilation), type)
-                || Equals(GetTimeSpanType(compilation), type)
-                || Equals(GetDateTimeOffsetType(compilation), type)
-                || Equals(GetUriType(compilation), type)
-                )
+            if(type.TypeKind == TypeKind.Delegate)
+            {
+                return true;
+            }
+
+            if (
+                SymbolEqualityComparer.Default.Equals(GetGuidType(compilation), type)
+                || SymbolEqualityComparer.Default.Equals(GetTimeSpanType(compilation), type)
+                || SymbolEqualityComparer.Default.Equals(GetDateTimeOffsetType(compilation), type)
+                || SymbolEqualityComparer.Default.Equals(GetUriType(compilation), type)
+                || SymbolEqualityComparer.Default.Equals(GetXNameType(compilation), type))
             {
                 return true;
             }
@@ -325,6 +330,13 @@ namespace Apex.Analyzers.Immutable.Rules
         private static ITypeSymbol GetKeyValuePairType(Compilation compilation)
         {
             return _kvpType ?? (_kvpType = compilation.GetTypeByMetadataName("System.Collections.Generic.KeyValuePair`2"));
+        }
+
+        private static ITypeSymbol _xnameType;
+
+        private static ITypeSymbol GetXNameType(Compilation compilation)
+        {
+            return _xnameType ?? (_xnameType = compilation.GetTypeByMetadataName("System.Xml.Linq.XName"));
         }
     }
 }

@@ -226,6 +226,8 @@ namespace Apex.Analyzers.Immutable.Test
             private readonly DateTimeOffset r;
             private readonly int? s;
             private readonly KeyValuePair<int, string> t;
+            private readonly System.Xml.Linq.XName u;
+            private readonly Func<int> v; 
         }
 ");
             VerifyCSharpDiagnostic(test);
@@ -588,6 +590,9 @@ namespace Apex.Analyzers.Immutable.Test
             public TimeSpan q {get;}
             public DateTimeOffset r {get;}
             public int? s {get;}
+            public KeyValuePair<int, string> t {get;}
+            public Func<int> u {get;}
+            public System.Xml.Linq.XName v {get;}
         }
 ");
             VerifyCSharpDiagnostic(test);
