@@ -27,7 +27,6 @@ namespace TestHelper
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
-        internal static string VisualBasicDefaultExt = "vb";
         internal static string TestProjectName = "TestProject";
 
         #region  Get Diagnostics
@@ -36,12 +35,11 @@ namespace TestHelper
         /// Given classes in the form of strings, their language, and an IDiagnosticAnalyzer to apply to it, return the diagnostics found in the string after converting it to a document.
         /// </summary>
         /// <param name="sources">Classes in the form of strings</param>
-        /// <param name="language">The language the source classes are in</param>
         /// <param name="analyzer">The analyzer to be run on the sources</param>
         /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-        private static Diagnostic[] GetSortedDiagnostics(string[] sources, string language, DiagnosticAnalyzer analyzer)
+        private static Diagnostic[] GetSortedDiagnostics(string[] sources, DiagnosticAnalyzer analyzer)
         {
-            return GetSortedDiagnosticsFromDocuments(analyzer, GetDocuments(sources, language));
+            return GetSortedDiagnosticsFromDocuments(analyzer, GetDocuments(sources));
         }
 
         /// <summary>
@@ -108,16 +106,10 @@ namespace TestHelper
         /// Given an array of strings as sources and a language, turn them into a project and return the documents and spans of it.
         /// </summary>
         /// <param name="sources">Classes in the form of strings</param>
-        /// <param name="language">The language the source code is in</param>
         /// <returns>A Tuple containing the Documents produced from the sources and their TextSpans if relevant</returns>
-        private static Document[] GetDocuments(string[] sources, string language)
+        private static Document[] GetDocuments(string[] sources)
         {
-            if (language != LanguageNames.CSharp && language != LanguageNames.VisualBasic)
-            {
-                throw new ArgumentException("Unsupported Language");
-            }
-
-            var project = CreateProject(sources, language);
+            var project = CreateProject(sources);
             var documents = project.Documents.ToArray();
 
             if (sources.Length != documents.Length)
@@ -132,29 +124,27 @@ namespace TestHelper
         /// Create a Document from a string through creating a project that contains it.
         /// </summary>
         /// <param name="source">Classes in the form of a string</param>
-        /// <param name="language">The language the source code is in</param>
         /// <returns>A Document created from the source string</returns>
-        protected static Document CreateDocument(string source, string language = LanguageNames.CSharp)
+        protected static Document CreateDocument(string source)
         {
-            return CreateProject(new[] { source }, language).Documents.First();
+            return CreateProject(new[] { source }).Documents.First();
         }
 
         /// <summary>
         /// Create a project using the inputted strings as sources.
         /// </summary>
         /// <param name="sources">Classes in the form of strings</param>
-        /// <param name="language">The language the source code is in</param>
         /// <returns>A Project created out of the Documents created from the source strings</returns>
         private static Project CreateProject(string[] sources, string language = LanguageNames.CSharp)
         {
             string fileNamePrefix = DefaultFilePathPrefix;
-            string fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
+            string fileExt = CSharpDefaultFileExt;
 
             var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
 
             var solution = new AdhocWorkspace()
                 .CurrentSolution
-                .AddProject(projectId, TestProjectName, TestProjectName, language)
+                .AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp)
                 .AddMetadataReference(projectId, CorlibReference)
                 .AddMetadataReference(projectId, SystemCoreReference)
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
