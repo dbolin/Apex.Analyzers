@@ -20,12 +20,12 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Apex.Analyzers.Immutable.snk</AssemblyOriginatorKeyFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Apex.Analyzers.Immutable.Attributes" Version="1.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.8" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.4.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 

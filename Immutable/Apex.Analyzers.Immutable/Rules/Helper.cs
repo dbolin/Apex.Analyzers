@@ -59,8 +59,8 @@ namespace Apex.Analyzers.Immutable.Rules
                 return true;
             }
 
-            if(HasImmutableNamespace(type) || Equals(type.OriginalDefinition, GetNullableType(compilation))
-                || Equals(type.OriginalDefinition, GetKeyValuePairType(compilation)))
+            if(HasImmutableNamespace(type) || SymbolEqualityComparer.Default.Equals(type.OriginalDefinition, GetNullableType(compilation))
+                || SymbolEqualityComparer.Default.Equals(type.OriginalDefinition, GetKeyValuePairType(compilation)))
             {
                 if (type is INamedTypeSymbol nts
                     && nts.IsGenericType)
@@ -187,7 +187,7 @@ namespace Apex.Analyzers.Immutable.Rules
         {
             return t =>
             {
-                if(type.TypeArguments.Any(x => Equals(x, t)))
+                if(type.TypeArguments.Any(x => SymbolEqualityComparer.Default.Equals(x, t)))
                 {
                     return true;
                 }
@@ -273,10 +273,10 @@ namespace Apex.Analyzers.Immutable.Rules
             }
 
             if(
-                Equals(GetGuidType(compilation), type)
-                || Equals(GetTimeSpanType(compilation), type)
-                || Equals(GetDateTimeOffsetType(compilation), type)
-                || Equals(GetUriType(compilation), type)
+                SymbolEqualityComparer.Default.Equals(GetGuidType(compilation), type)
+                || SymbolEqualityComparer.Default.Equals(GetTimeSpanType(compilation), type)
+                || SymbolEqualityComparer.Default.Equals(GetDateTimeOffsetType(compilation), type)
+                || SymbolEqualityComparer.Default.Equals(GetUriType(compilation), type)
                 )
             {
                 return true;
