@@ -38,7 +38,7 @@ namespace TestHelper
             public string TestCode { get; internal set; }
             public string FixedCode { get; internal set; }
             public List<MetadataReference>  MetadataReferences { get; } = new List<MetadataReference>();
-            public List<(string FileName, string Text)> AdditionalDocuments { get; } = new List<(string FileName, string Text)>();
+            public List<AdditionalFile> AdditionalFiles { get; } = new List<AdditionalFile>();
             public List<DiagnosticResult> ExpectedDiagnostics { get; } = new List<DiagnosticResult>();
 
             public Test() 
@@ -82,9 +82,10 @@ namespace TestHelper
 
             private Diagnostic[] GetSortedDiagnosticsFromDocument(TAnalyzer analyzer, Document document)
             {
-               var diagnostics = new List<Diagnostic>();
+                var diagnostics = new List<Diagnostic>();
                 var compilation = document.Project.GetCompilationAsync().Result;
-                var compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create<DiagnosticAnalyzer>(analyzer));
+                var options = new AnalyzerOptions(AdditionalFiles.ToImmutableArray<AdditionalText>());
+                var compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create<DiagnosticAnalyzer>(analyzer), options);
                 var diags = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
                 diagnostics.AddRange(diags.Concat(compilation.GetDiagnostics().Where(x => x.Severity == DiagnosticSeverity.Error)));
                 var results = SortDiagnostics(diagnostics);
@@ -117,11 +118,6 @@ namespace TestHelper
 
                     var documentId = DocumentId.CreateNewId(projectId, debugName: TestFileName);
                     solution = solution.AddDocument(documentId, TestFileName, SourceText.From(TestCode));
-                    foreach(var additionalDocument in AdditionalDocuments)
-                    {
-                        documentId = DocumentId.CreateNewId(projectId, debugName: additionalDocument.FileName);
-                        solution = solution.AddAdditionalDocument(documentId, additionalDocument.FileName, SourceText.From(additionalDocument.Text));
-                    }
                     return solution.GetProject(projectId);
                 }
             }
