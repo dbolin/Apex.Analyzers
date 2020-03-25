@@ -17,16 +17,43 @@ using Xunit;
 
 namespace TestHelper
 {
-    public static partial class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
+    public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
         where TAnalyzer : DiagnosticAnalyzer, new()
         where TCodeFix : CodeFixProvider, new()
     {
         public class Test
         {
+            private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+            private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
+            private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
+            private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+            private static readonly MetadataReference AttributeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location);
+            private static readonly MetadataReference AnalyzerReference = MetadataReference.CreateFromFile(typeof(ImmutableAttribute).Assembly.Location);
+            private static readonly MetadataReference ImmutableReference = MetadataReference.CreateFromFile(typeof(ImmutableArray<int>).Assembly.Location);
+            private static readonly MetadataReference NetStandard2Reference = MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location);
+
+            private static readonly string TestFileName = "Test0.cs";
+            private static readonly string TestProjectName = "TestProject";
+
             public string TestCode { get; internal set; }
             public string FixedCode { get; internal set; }
+            public List<MetadataReference>  MetadataReferences { get; } = new List<MetadataReference>();
             public List<DiagnosticResult> ExpectedDiagnostics { get; } = new List<DiagnosticResult>();
 
+            public Test() 
+            {
+                MetadataReferences.AddRange(new[]
+                { 
+                    CorlibReference,
+                    SystemCoreReference,
+                    CSharpSymbolsReference,
+                    CodeAnalysisReference,
+                    AnalyzerReference,
+                    AttributeReference,
+                    ImmutableReference,
+                    NetStandard2Reference
+                });
+            }
             public void Run() 
             {
                 var analyzer = new TAnalyzer();
@@ -39,19 +66,6 @@ namespace TestHelper
                     VerifyFix(analyzer, fix, TestCode, FixedCode);
                 }
             }
-
-            private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-            private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
-            private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
-            private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
-            private static readonly MetadataReference AttributeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location);
-            private static readonly MetadataReference AnalyzerReference = MetadataReference.CreateFromFile(typeof(ImmutableAttribute).Assembly.Location);
-            private static readonly MetadataReference ImmutableReference = MetadataReference.CreateFromFile(typeof(ImmutableArray<int>).Assembly.Location);
-            private static readonly MetadataReference NetStandard2Reference = MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location);
-
-            internal static string DefaultFilePathPrefix = "Test";
-            internal static string CSharpDefaultFileExt = "cs";
-            internal static string TestProjectName = "TestProject";
 
             #region  Get Diagnostics
 
@@ -97,27 +111,16 @@ namespace TestHelper
             /// <returns>A Project created out of the Documents created from the source strings</returns>
             private Project CreateProject(string language = LanguageNames.CSharp)
             {
-                string fileNamePrefix = DefaultFilePathPrefix;
-                string fileExt = CSharpDefaultFileExt;
-
                 var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
 
                 var solution = new AdhocWorkspace()
                     .CurrentSolution
                     .AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp)
-                    .AddMetadataReference(projectId, CorlibReference)
-                    .AddMetadataReference(projectId, SystemCoreReference)
-                    .AddMetadataReference(projectId, CSharpSymbolsReference)
-                    .AddMetadataReference(projectId, CodeAnalysisReference)
-                    .AddMetadataReference(projectId, AnalyzerReference)
-                    .AddMetadataReference(projectId, AttributeReference)
-                    .AddMetadataReference(projectId, ImmutableReference)
-                    .AddMetadataReference(projectId, NetStandard2Reference)
+                    .AddMetadataReferences(projectId, MetadataReferences)
                     .WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.ConsoleApplication, allowUnsafe: true));
 
-                var newFileName = fileNamePrefix + "0." + fileExt;
-                var documentId = DocumentId.CreateNewId(projectId, debugName: newFileName);
-                solution = solution.AddDocument(documentId, newFileName, SourceText.From(TestCode));
+                var documentId = DocumentId.CreateNewId(projectId, debugName: TestFileName);
+                solution = solution.AddDocument(documentId, TestFileName, SourceText.From(TestCode));
 
                 return solution.GetProject(projectId);
             }
