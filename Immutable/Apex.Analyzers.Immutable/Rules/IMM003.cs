@@ -37,7 +37,7 @@ namespace Apex.Analyzers.Immutable.Rules
 
             if(Helper.HasImmutableAttributeAndShouldVerify(containingType)
                 && Helper.ShouldCheckMemberTypeForImmutability(symbol)
-                && !Helper.IsImmutableType(symbol.Type, context.Compilation, ref genericTypeArgument))
+                && !Helper.IsImmutableType(symbol.Type, context, ref genericTypeArgument))
             {
                 if(genericTypeArgument != null)
                 {

@@ -27,7 +27,7 @@ namespace Apex.Analyzers.Immutable.Rules
             var symbol = (INamedTypeSymbol)context.Symbol;
             if(symbol.BaseType != null
                 && Helper.HasImmutableAttributeAndShouldVerify(symbol)
-                && !Helper.IsImmutableType(symbol.BaseType, context.Compilation, ref genericTypeArgument))
+                && !Helper.IsImmutableType(symbol.BaseType, context, ref genericTypeArgument))
             {
                 var diagnostic = Diagnostic.Create(Rule, symbol.Locations[0], symbol.Name);
                 context.ReportDiagnostic(diagnostic);
