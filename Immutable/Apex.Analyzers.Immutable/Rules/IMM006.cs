@@ -14,20 +14,22 @@ namespace Apex.Analyzers.Immutable.Rules
         private const string Category = "Architecture";
 
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
-        internal static void Initialize(AnalysisContext context)
+        internal static void Initialize(AnalysisContext context, ImmutableTypes immutableTypes)
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.EnableConcurrentExecution();
-            context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
+            context.RegisterSymbolAction(x => AnalyzeSymbol(x, immutableTypes), SymbolKind.NamedType);
         }
 
-        private static void AnalyzeSymbol(SymbolAnalysisContext context)
+        private static void AnalyzeSymbol(SymbolAnalysisContext context, ImmutableTypes immutableTypes)
         {
+            immutableTypes.Initialize(context.Compilation, context.Options, context.CancellationToken);
+
             string genericTypeArgument = null;
             var symbol = (INamedTypeSymbol)context.Symbol;
-            if(symbol.BaseType != null
+            if (symbol.BaseType != null
                 && Helper.HasImmutableAttributeAndShouldVerify(symbol)
-                && !Helper.IsImmutableType(symbol.BaseType, context, ref genericTypeArgument))
+                && !immutableTypes.IsImmutableType(symbol.BaseType, ref genericTypeArgument))
             {
                 var diagnostic = Diagnostic.Create(Rule, symbol.Locations[0], symbol.Name);
                 context.ReportDiagnostic(diagnostic);

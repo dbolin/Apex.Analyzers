@@ -17,29 +17,31 @@ namespace Apex.Analyzers.Immutable.Rules
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
         public static DiagnosticDescriptor RuleGeneric = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormatGeneric, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 
-        internal static void Initialize(AnalysisContext context)
+        internal static void Initialize(AnalysisContext context, ImmutableTypes immutableTypes)
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.EnableConcurrentExecution();
-            context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Property);
+            context.RegisterSymbolAction(x => AnalyzeSymbol(x, immutableTypes), SymbolKind.Property);
         }
 
-        private static void AnalyzeSymbol(SymbolAnalysisContext context)
+        private static void AnalyzeSymbol(SymbolAnalysisContext context, ImmutableTypes immutableTypes)
         {
+            immutableTypes.Initialize(context.Compilation, context.Options, context.CancellationToken);
+
             var symbol = (IPropertySymbol)context.Symbol;
             var containingType = symbol.ContainingType;
-            if(containingType == null)
+            if (containingType == null)
             {
                 return;
             }
 
             string genericTypeArgument = null;
-            if(Helper.HasImmutableAttributeAndShouldVerify(containingType)
+            if (Helper.HasImmutableAttributeAndShouldVerify(containingType)
                 && Helper.ShouldCheckMemberTypeForImmutability(symbol)
-                && !Helper.IsImmutableType(symbol.Type, context, ref genericTypeArgument)
+                && !immutableTypes.IsImmutableType(symbol.Type, ref genericTypeArgument)
                 && Helper.IsAutoProperty(symbol))
             {
-                if(genericTypeArgument != null)
+                if (genericTypeArgument != null)
                 {
                     var diagnostic = Diagnostic.Create(RuleGeneric, symbol.Locations[0], symbol.Name, genericTypeArgument);
                     context.ReportDiagnostic(diagnostic);

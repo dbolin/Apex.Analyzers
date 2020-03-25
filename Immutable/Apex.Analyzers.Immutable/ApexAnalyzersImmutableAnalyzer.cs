@@ -21,12 +21,13 @@ namespace Apex.Analyzers.Immutable
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
 
+            var whitelist = new ImmutableTypes();
             IMM001.Initialize(context);
             IMM002.Initialize(context);
-            IMM003.Initialize(context);
-            IMM004.Initialize(context);
+            IMM003.Initialize(context, whitelist);
+            IMM004.Initialize(context, whitelist);
             IMM005.Initialize(context);
-            IMM006.Initialize(context);
+            IMM006.Initialize(context, whitelist);
             IMM007.Initialize(context);
         }
     }
