@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Apex.Analyzers.Immutable.Rules
 {
-    public class ImmutableTypes
+    internal class ImmutableTypes
     {
         private readonly ConcurrentDictionary<ITypeSymbol, Entry> _entries = new ConcurrentDictionary<ITypeSymbol, Entry>();
 
