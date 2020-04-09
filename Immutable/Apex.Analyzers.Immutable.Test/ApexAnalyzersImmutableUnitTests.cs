@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Apex.Analyzers.Immutable.Test
 {
-    public class UnitTest : CodeFixVerifier
+    public class UnitTest
     {
 
         //No diagnostics expected to show up
@@ -41,10 +41,9 @@ namespace Apex.Analyzers.Immutable.Test
                         }
             };
 
-            VerifyCSharpDiagnostic(test, expected);
-
             var fixtest = test.Replace("private int x", "private readonly int x");
-            VerifyCSharpFix(test, fixtest);
+
+            VerifyCSharpFix(test, new[] { expected }, fixtest);
         }
 
         [Fact]
@@ -84,10 +83,8 @@ namespace Apex.Analyzers.Immutable.Test
                         }
             };
 
-            VerifyCSharpDiagnostic(test, expected);
-
             var fixtest = test.Replace("public int x", "public readonly int x");
-            VerifyCSharpFix(test, fixtest);
+            VerifyCSharpFix(test, new[] { expected }, fixtest);
         }
 
         [Fact]
@@ -150,10 +147,8 @@ namespace Apex.Analyzers.Immutable.Test
                         }
             };
 
-            VerifyCSharpDiagnostic(test, expected);
-
             var fixtest = test.Replace("private int x {get; set;}", "private int x {get; }");
-            VerifyCSharpFix(test, fixtest);
+            VerifyCSharpFix(test, new[] { expected }, fixtest);
         }
 
         [Fact]
@@ -196,7 +191,7 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [Fact]
-        public void IMM003MemberFieldsWhitelisted()
+        public void IMM003MemberFieldsWhitelistedByConvention()
         {
             var test = GetCode(@"
         enum TestEnum {
@@ -229,6 +224,24 @@ namespace Apex.Analyzers.Immutable.Test
         }
 ");
             VerifyCSharpDiagnostic(test);
+        }
+
+         [Fact]
+        public void IMM003MemberFieldsWhitelistedByConfiguration()
+        {
+            var code = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            private readonly Func<int> a;
+        }
+");
+            
+            string whitelist = $"System.Func`1";
+            var test = new CSharpCodeFixVerifier<ApexAnalyzersImmutableAnalyzer, ApexAnalyzersImmutableCodeFixProvider>.Test();
+            test.TestCode = code;
+            test.AdditionalFiles.Add(new AdditionalFile("ImmutableTypes.txt", whitelist));
+            test.Run();
         }
 
         [Fact]
@@ -559,7 +572,7 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [Fact]
-        public void IMM004MemberPropsWhitelisted()
+        public void IMM004MemberPropsWhitelistedByConvention()
         {
             var test = GetCode(@"
         public enum TestEnum {
@@ -591,6 +604,24 @@ namespace Apex.Analyzers.Immutable.Test
         }
 ");
             VerifyCSharpDiagnostic(test);
+        }
+
+        [Fact]
+        public void IMM004MemberPropsWhitelistedByConfiguration()
+        {
+            var code = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            public Action a {get;}
+        }
+");
+
+            string whitelist = $"System.Action";
+            var test = new CSharpCodeFixVerifier<ApexAnalyzersImmutableAnalyzer, ApexAnalyzersImmutableCodeFixProvider>.Test();
+            test.TestCode = code;
+            test.AdditionalFiles.Add(new AdditionalFile("ImmutableTypes.txt", whitelist));
+            test.Run();
         }
 
         [Fact]
@@ -1020,14 +1051,14 @@ namespace Apex.Analyzers.Immutable.Test
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        private void VerifyCSharpDiagnostic(string source, params DiagnosticResult[] expected)
         {
-            return new ApexAnalyzersImmutableCodeFixProvider();
+            CSharpCodeFixVerifier<ApexAnalyzersImmutableAnalyzer, ApexAnalyzersImmutableCodeFixProvider>.VerifyAnalyzer(source, expected);
         }
 
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        private void VerifyCSharpFix(string oldSource, DiagnosticResult[] expected, string newSource)
         {
-            return new ApexAnalyzersImmutableAnalyzer();
+            CSharpCodeFixVerifier<ApexAnalyzersImmutableAnalyzer, ApexAnalyzersImmutableCodeFixProvider>.VerifyCodeFix(oldSource, expected, newSource);
         }
 
         private string GetCode(string code, string namesp = "ConsoleApplication1")
