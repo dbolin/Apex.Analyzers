@@ -38,4 +38,8 @@
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Apex.Analyzers.Immutable.Semantics\Apex.Analyzers.Immutable.Semantics.csproj" />
+  </ItemGroup>
 </Project>
