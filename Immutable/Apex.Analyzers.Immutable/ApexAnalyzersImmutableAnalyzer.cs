@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Apex.Analyzers.Immutable.Rules;
+using Apex.Analyzers.Immutable.Semantics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 

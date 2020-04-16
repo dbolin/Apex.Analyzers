@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Apex.Analyzers.Immutable.Semantics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;

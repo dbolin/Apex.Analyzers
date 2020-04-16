@@ -1,26 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Apex.Analyzers.Immutable</PackageId>
-    <PackageVersion>1.1.0</PackageVersion>
+    <PackageId>Apex.Analyzers.Immutable.Semantics</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
     <Authors>Dominic Bolin</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dbolin/Apex.Analyzers</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dbolin/Apex.Analyzers</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Roslyn powered analyzers for C# to support defining immutable types</Description>
+    <Description>Semantics used by Apex.Analyzers.Immutable</Description>
     <Copyright>Copyright (c) 2019 Dominic Bolin</Copyright>
     <PackageTags>Apex.Analyzers.Immutable, immutable, architecture, design, csharp, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Apex.Analyzers.Immutable.snk</AssemblyOriginatorKeyFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyOriginatorKeyFile>Apex.Analyzers.Immutable.Semantics.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,18 +27,5 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
-    <EmbeddedResource Update="Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Apex.Analyzers.Immutable.Semantics\Apex.Analyzers.Immutable.Semantics.csproj" />
-  </ItemGroup>
+  
 </Project>
