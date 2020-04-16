@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Apex.Analyzers.Immutable.Semantics
 {
-    public class ImmutableTypes
+    public sealed class ImmutableTypes
     {
         private readonly ConcurrentDictionary<ITypeSymbol, Entry> _entries = new ConcurrentDictionary<ITypeSymbol, Entry>();
 
