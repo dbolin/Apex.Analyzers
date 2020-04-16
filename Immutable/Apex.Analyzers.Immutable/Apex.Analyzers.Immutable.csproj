@@ -40,6 +40,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Apex.Analyzers.Immutable.Semantics\Apex.Analyzers.Immutable.Semantics.csproj" />
-    <ProjectReference Include="..\Apex.Analyzers.Immutable.Attributes\Apex.Analyzers.Immutable.Attributes.csproj" />
   </ItemGroup>
 </Project>
