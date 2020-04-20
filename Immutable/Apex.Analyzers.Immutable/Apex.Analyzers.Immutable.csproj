@@ -7,7 +7,7 @@
 
   <PropertyGroup>
     <PackageId>Apex.Analyzers.Immutable</PackageId>
-    <PackageVersion>1.2.1</PackageVersion>
+    <PackageVersion>1.2.4</PackageVersion>
     <Authors>Dominic Bolin</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dbolin/Apex.Analyzers</PackageProjectUrl>
@@ -24,7 +24,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Apex.Analyzers.Immutable.Semantics" Version="1.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.4.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
@@ -37,5 +36,12 @@
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\Apex.Analyzers.Immutable.Semantics.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Apex.Analyzers.Immutable.Semantics\Apex.Analyzers.Immutable.Semantics.csproj" PrivateAssets="all"/>
+    <ProjectReference Include="..\Apex.Analyzers.Immutable.Attributes\Apex.Analyzers.Immutable.Attributes.csproj" />
   </ItemGroup>
 </Project>
+ 
