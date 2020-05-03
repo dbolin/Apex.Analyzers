@@ -8,17 +8,26 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace Apex.Analyzers.Immutable.Rules
+namespace Apex.Analyzers.Immutable.Semantics
 {
-    internal class ImmutableTypes
+    public sealed class ImmutableTypes
     {
         private readonly ConcurrentDictionary<ITypeSymbol, Entry> _entries = new ConcurrentDictionary<ITypeSymbol, Entry>();
 
-        public Compilation Compilation { get; private set; }
-        public AnalyzerOptions AnalyzerOptions { get; private set; }
-        public CancellationToken CancellationToken { get; private set; }
+        private Compilation Compilation { get; set; }
+        private AnalyzerOptions AnalyzerOptions { get; set; }
+        private CancellationToken CancellationToken { get; set; }
 
-        public void Initialize(Compilation compilation, AnalyzerOptions analyzerOptions, CancellationToken cancellationToken)
+        public ImmutableTypes(Compilation compilation, AnalyzerOptions analyzerOptions, CancellationToken cancellationToken)
+        {
+            Initialize(compilation, analyzerOptions, cancellationToken);
+        }
+
+        internal ImmutableTypes()
+        {
+        }
+
+        internal void Initialize(Compilation compilation, AnalyzerOptions analyzerOptions, CancellationToken cancellationToken)
         {
             Compilation = compilation;
             AnalyzerOptions = analyzerOptions;
@@ -47,7 +56,7 @@ namespace Apex.Analyzers.Immutable.Rules
                 return Entry.Immutable;
             }
 
-            if(type is INamedTypeSymbol nts && nts.IsGenericType)
+            if (type is INamedTypeSymbol nts && nts.IsGenericType)
             {
                 if (Helper.HasImmutableAttribute(type) || IsWhitelistedType(nts.OriginalDefinition))
                 {
@@ -131,7 +140,7 @@ namespace Apex.Analyzers.Immutable.Rules
 
         public bool IsWhitelistedType(ITypeSymbol type)
         {
-            if (Helper.HasImmutableNamespace(type)) 
+            if (Helper.HasImmutableNamespace(type))
             {
                 return SymbolEqualityComparer.Default.Equals(type, type.OriginalDefinition);
             }

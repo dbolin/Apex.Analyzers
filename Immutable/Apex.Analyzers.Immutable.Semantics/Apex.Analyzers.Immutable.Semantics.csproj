@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Apex.Analyzers.Immutable.Semantics</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Dominic Bolin</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/dbolin/Apex.Analyzers</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dbolin/Apex.Analyzers</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Semantics used by Apex.Analyzers.Immutable</Description>
+    <Copyright>Copyright (c) 2019 Dominic Bolin</Copyright>
+    <PackageTags>Apex.Analyzers.Immutable, immutable, architecture, design, csharp, analyzers</PackageTags>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Apex.Analyzers.Immutable.Semantics.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.4.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Apex.Analyzers.Immutable.Attributes\Apex.Analyzers.Immutable.Attributes.csproj" />
+  </ItemGroup>
+</Project>
