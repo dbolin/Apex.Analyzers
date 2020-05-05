@@ -245,6 +245,25 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [Fact]
+        public void IMM003ImmutableDelegatesDoNotCheckTypeParametersForImmutability()
+        {
+            var code = GetCode(@"
+        class NotImmutable {}
+
+        [Immutable]
+        class Test
+        {
+            private readonly Func<NotImmutable> a;
+        }
+");
+            string whitelist = $"System.Func`1";
+            var test = new CSharpCodeFixVerifier<ApexAnalyzersImmutableAnalyzer, ApexAnalyzersImmutableCodeFixProvider>.Test();
+            test.TestCode = code;
+            test.AdditionalFiles.Add(new AdditionalFile("ImmutableTypes.txt", whitelist));
+            test.Run();
+        }
+
+        [Fact]
         public void IMM003MemberFieldsImmutable()
         {
             var test = GetCode(@"

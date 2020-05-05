@@ -60,7 +60,11 @@ namespace Apex.Analyzers.Immutable.Semantics
             {
                 if (Helper.HasImmutableAttribute(type) || IsWhitelistedType(nts.OriginalDefinition))
                 {
-                    if (Helper.HasImmutableAttributeAndShouldVerify(type))
+                    if (type.TypeKind == TypeKind.Delegate)
+                    {
+                        return Entry.Immutable;
+                    }
+                    else if (Helper.HasImmutableAttributeAndShouldVerify(type))
                     {
                         return GetGenericImmutableTypeEntry(nts, excludedTypes);
                     }
