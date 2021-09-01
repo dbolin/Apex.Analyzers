@@ -12,7 +12,7 @@ namespace Apex.Analyzers.Immutable.Semantics
 {
     public sealed class ImmutableTypes
     {
-        private readonly ConcurrentDictionary<ITypeSymbol, Entry> _entries = new ConcurrentDictionary<ITypeSymbol, Entry>();
+        private readonly ConcurrentDictionary<ITypeSymbol, Entry> _entries = new ConcurrentDictionary<ITypeSymbol, Entry>(SymbolEqualityComparer.Default);
 
         private Compilation Compilation { get; set; }
         private AnalyzerOptions AnalyzerOptions { get; set; }
@@ -85,7 +85,7 @@ namespace Apex.Analyzers.Immutable.Semantics
 
         private Entry GetGenericTypeArgumentsEntry(INamedTypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
         {
-            excludedTypes = excludedTypes ?? new HashSet<ITypeSymbol>();
+            excludedTypes = excludedTypes ?? new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
             excludedTypes.Add(type);
 
             var typesToCheck = type.TypeArguments;
@@ -94,7 +94,7 @@ namespace Apex.Analyzers.Immutable.Semantics
 
         private Entry GetGenericImmutableTypeEntry(INamedTypeSymbol type, HashSet<ITypeSymbol> excludedTypes = null)
         {
-            excludedTypes = excludedTypes ?? new HashSet<ITypeSymbol>();
+            excludedTypes = excludedTypes ?? new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
             excludedTypes.Add(type);
 
             var members = type.GetMembers();
@@ -263,7 +263,7 @@ namespace Apex.Analyzers.Immutable.Semantics
             entries.Add("System.Uri");
             entries.Add("System.Nullable`1");
             entries.Add("System.Collections.Generic.KeyValuePair`2");
-            var result = new HashSet<ISymbol>();
+            var result = new HashSet<ISymbol>(SymbolEqualityComparer.Default);
             foreach (var entry in entries)
             {
                 var symbols = DocumentationCommentId.GetSymbolsForDeclarationId($"T:{entry}", Compilation);

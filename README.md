@@ -18,6 +18,7 @@ Provides an `ImmutableAttribute` type which can be applied to classes, structs, 
 | `IMM005` | Warning | 'This' should not be passed out of the constructor of an immutable type | No |
 | `IMM006` | Error | The base type of an immutable type must be 'object' or immutable | No |
 | `IMM007` | Error | Types derived from an immutable type must be immutable | No |
+| `IMM008` | Warning | 'This' should not be passed out of an init only property method of an immutable type | No |
 
 ### Whitelisting types via additional files
 

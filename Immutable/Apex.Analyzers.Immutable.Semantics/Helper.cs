@@ -60,5 +60,10 @@ namespace Apex.Analyzers.Immutable.Semantics
                     || !symbol.GetAttributes().Any(x => x.AttributeClass.Name == "NonSerializedAttribute"
                     && x.AttributeClass.ContainingNamespace?.Name == "System"));
         }
+
+        internal static bool IsInitOnlyMethod(IMethodSymbol symbol)
+        {
+            return symbol.ReturnTypeCustomModifiers.Any(x => x.Modifier.Name == "IsExternalInit");
+        }
     }
 }

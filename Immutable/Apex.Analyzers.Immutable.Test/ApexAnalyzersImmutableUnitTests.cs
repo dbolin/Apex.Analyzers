@@ -165,6 +165,24 @@ namespace Apex.Analyzers.Immutable.Test
         }
 
         [Fact]
+        public void IMM002MemberPropSetPassingOutInstanceReference()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            private readonly int x;
+            private int X {get => x; set { M(this); } }
+
+            private static int M(Test t) {
+                return t.X + 1;
+            }
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [Fact]
         public void IMM002MemberPropReadonly()
         {
             var test = GetCode(@"
@@ -172,6 +190,19 @@ namespace Apex.Analyzers.Immutable.Test
         class Test
         {
             private int x {get;}
+        }
+");
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [Fact]
+        public void IMM002MemberPropReadonlyInit()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            private int x {get; init;}
         }
 ");
             VerifyCSharpDiagnostic(test);
@@ -1064,6 +1095,48 @@ namespace Apex.Analyzers.Immutable.Test
                 Locations =
                     new[] {
                             new DiagnosticResultLocation("Test0.cs", 18, 15)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
+        public void IMM008CapturePartiallyConstructedInstanceReferenceInInitOnlyProperty()
+        {
+            var test = GetCode(@"
+        [Immutable]
+        class Test
+        {
+            private readonly int x;
+            public int X {
+                get { return x; }
+                init {
+                    x = Test2.M(this);
+                }
+            }
+        }
+
+        class Test2 {
+            public static int M(Test t) {
+                return t.X + 1;
+            }
+
+            public void T() {
+                var t = new Test {
+                    X = 1
+                };
+            }
+        }
+");
+            var expected = new DiagnosticResult
+            {
+                Id = "IMM008",
+                Message = "Possibly incorrect usage of 'this' in an init only property method of an immutable type",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 20, 33)
                         }
             };
 

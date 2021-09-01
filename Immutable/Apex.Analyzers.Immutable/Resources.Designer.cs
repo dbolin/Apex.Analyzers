@@ -10,7 +10,6 @@
 
 namespace Apex.Analyzers.Immutable {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace Apex.Analyzers.Immutable {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Apex.Analyzers.Immutable.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Apex.Analyzers.Immutable.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -269,7 +268,7 @@ namespace Apex.Analyzers.Immutable {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Types declared in Immutable namespace must be immutable.
+        ///   Looks up a localized string similar to &apos;This&apos; should not be passed out of an init only property method of an immutable type.
         /// </summary>
         internal static string IMM008Description {
             get {
@@ -278,7 +277,7 @@ namespace Apex.Analyzers.Immutable {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type &apos;{0}&apos; must be immutable because it is declared in Immutable namespace.
+        ///   Looks up a localized string similar to Possibly incorrect usage of &apos;this&apos; in an init only property method of an immutable type.
         /// </summary>
         internal static string IMM008MessageFormat {
             get {
@@ -287,7 +286,7 @@ namespace Apex.Analyzers.Immutable {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Types declared in Immutable namespace must be immutable.
+        ///   Looks up a localized string similar to &apos;This&apos; should not be passed out of an init only property method of an immutable type.
         /// </summary>
         internal static string IMM008Title {
             get {

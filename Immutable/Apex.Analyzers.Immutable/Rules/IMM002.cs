@@ -1,6 +1,7 @@
 ﻿using Apex.Analyzers.Immutable.Semantics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Linq;
 
 namespace Apex.Analyzers.Immutable.Rules
 {
@@ -32,7 +33,8 @@ namespace Apex.Analyzers.Immutable.Rules
             }
 
             if(Helper.HasImmutableAttributeAndShouldVerify(containingType)
-                && !symbol.IsReadOnly
+                && !symbol.IsReadOnly 
+                && (symbol.SetMethod == null || !Helper.IsInitOnlyMethod(symbol.SetMethod))
                 && Helper.ShouldCheckMemberTypeForImmutability(symbol)
                 && Helper.IsAutoProperty(symbol))
             {

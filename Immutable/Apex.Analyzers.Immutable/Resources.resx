@@ -190,12 +190,12 @@
     <value>Types derived from an immutable type must be immutable</value>
   </data>
   <data name="IMM008Description" xml:space="preserve">
-    <value>Types declared in Immutable namespace must be immutable</value>
+    <value>'This' should not be passed out of an init only property method of an immutable type</value>
   </data>
   <data name="IMM008MessageFormat" xml:space="preserve">
-    <value>Type '{0}' must be immutable because it is declared in Immutable namespace</value>
+    <value>Possibly incorrect usage of 'this' in an init only property method of an immutable type</value>
   </data>
   <data name="IMM008Title" xml:space="preserve">
-    <value>Types declared in Immutable namespace must be immutable</value>
+    <value>'This' should not be passed out of an init only property method of an immutable type</value>
   </data>
 </root>

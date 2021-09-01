@@ -104,7 +104,7 @@ namespace TestHelper
             private Document GetDocument()
             {
                 var project = CreateProject();
-                return project.Documents.Single();
+                return project.Documents.First();
 
                 Project CreateProject()
                 {
@@ -117,7 +117,14 @@ namespace TestHelper
                         .WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.ConsoleApplication, allowUnsafe: true));
 
                     var documentId = DocumentId.CreateNewId(projectId, debugName: TestFileName);
-                    solution = solution.AddDocument(documentId, TestFileName, SourceText.From(TestCode));
+                    var documentIdForInit = DocumentId.CreateNewId(projectId, debugName: "IsInitOnly.cs");
+                    solution = solution.AddDocument(documentId, TestFileName, SourceText.From(TestCode))
+                        .AddDocument(documentIdForInit, "IsInitOnly.cs", SourceText.From(@"namespace System.Runtime.CompilerServices
+{
+    public sealed class IsExternalInit
+    {
+    }
+}"));
                     return solution.GetProject(projectId);
                 }
             }
